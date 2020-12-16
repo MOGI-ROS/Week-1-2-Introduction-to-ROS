@@ -19,14 +19,22 @@ h2 {color:DeepSkyBlue;}
 ## Hova fogunk eljutni a félévben?
 
 ***
+
+
 <details>
-<summary><font size=5>Milyen szoftvereket fogunk használni?</font></summary>
+<summary>
+
+## Milyen szoftvereket fogunk használni?
+
+</summary>
 
 
 - ## Markdown
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
 
 https://www.markdownguide.org/extended-syntax/
+
+https://gist.github.com/seanh/13a93686bf4c2cb16e658b3cf96807f2
 
 - ## GIT
   - ### GIT parancssorból
