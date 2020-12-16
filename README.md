@@ -10,6 +10,8 @@ h1 {color:DodgerBlue;}
 h2 {color:DeepSkyBlue;}
 </style>
 
+Hi here is some text <span style="color: red">this is red</span>.
+
 # 1. hét - bevezetés
 
 ## Mi a ROS?
