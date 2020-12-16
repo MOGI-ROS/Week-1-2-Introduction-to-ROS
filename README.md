@@ -20,7 +20,7 @@ h2 {color:DeepSkyBlue;}
 
 ***
 <details>
-<summary><span style="font-size: 20px">Milyen szoftvereket fogunk használni?</span></summary>
+<summary><font size=5>Milyen szoftvereket fogunk használni?</font></summary>
 
 
 - ## Markdown
