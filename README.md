@@ -1,4 +1,4 @@
-<style>
+<!--style>
 details > summary {
   font-size: 150%;
   padding: 4px;
@@ -8,9 +8,7 @@ details > summary {
 }
 h1 {color:DodgerBlue;}
 h2 {color:DeepSkyBlue;}
-</style>
-
-Hi here is some text <span style="color: red">this is red</span>.
+</style-->
 
 # 1. hét - bevezetés
 
@@ -22,7 +20,7 @@ Hi here is some text <span style="color: red">this is red</span>.
 
 ***
 <details>
-<summary>Milyen szoftvereket fogunk használni?</summary>
+<summary><span style="font-size: 20px">Milyen szoftvereket fogunk használni?</span></summary>
 
 
 - ## Markdown
