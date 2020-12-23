@@ -206,11 +206,19 @@ Bash script a display inithez
 <details>
 <summary>ROS Melodic</summary>
 
-  - ### A ROS telepítése
+  - ### A ROS telepítése  
+http://wiki.ros.org/melodic/Installation
   
   - ### Catkin workspace parancsok
 
   - ### ROS parancsok
+roscd
+rosrun
+roslaunch
+rosnode list
+rosnode info /NODE
+rostopic list
+rostopic info /TOPIC
 
 </details>
 
@@ -220,16 +228,21 @@ Bash script a display inithez
 
 - ## ROS Master
 
-roscore
+A ROS Master felel az egyes node-ok regisztrációjáért, összeköti a publishereket és a subscriberek, ez írja le a teljes rendszerünk gráfját. Emellett ez tárolja a paramétereket is. Miután a ROS Master összekötötte az egyes node-okat, a node-ok peer-to-peer kommunikálnak, nem a ROS Masteren keresztül.  
+A ROS Mastert a `roscore` paranccsal indítjuk el.
+
 ```console
 david@DavidsLenovoX1:~/catkin_ws$ roscore
 Command 'roscore' not found, but can be installed with:
 
 sudo apt install python3-roslaunch
 ```
-source /opt/ros/noetic/setup.bash
 
-roscore
+Ha a telepítés során nem tettük be a ROS környezetet a .bashrc fájlba, akkor minden terminál ablakban kézzel kell betölteni a környezetet:
+
+`source /opt/ros/melodic/setup.bash`
+
+Ezután már indíthatjuk a ROS Mastert a `roscore`-ral.
 
 ```console
 david@DavidsLenovoX1:~/catkin_ws$ roscore
@@ -260,17 +273,22 @@ process[rosout-1]: started with pid [348]
 started core service [/rosout]
 ```
 
+___
 
-- ## ROS Node
+## ROS Node
 
-cd ~/catkin_ws/src
+Lépjünk be a már létrehozott catkin workspace-ünkbe:
 
-Új node készítése a `catkin_create_pkg` paranccsal.
-`catkin_create_pkg bme_ros_tutorials roscpp rospy std_msgs actionlib actionlib_msgs`
+`cd ~/catkin_ws/src`
 
-A függőségek:
+Új node-ot a `catkin_create_pkg` paranccsal tudunk létrehozni. Megadhatjuk a node-unk függőségeit a létrehozáskor:  
+`catkin_create_pkg bme_ros_tutorials roscpp rospy std_msgs actionlib actionlib_msgs`  
 
-CMakeList.txt
+Miután létrehoztuk a node-ot, egy üres `src` és `inc` mappa, illetve egy `CMakeList.txt` és egy `package.xml` fájl jn létre.
+
+Ezek a függőségek automatikusan bekerülnek a `CMakeList.txt` és `package.xml` fájlokba, de ezeket később is felvehetjük kézzel.
+
+A CMakeList.txt fájl:
 
 ```cmake
 cmake_minimum_required(VERSION 3.0.2)
@@ -294,13 +312,19 @@ find_package(catkin REQUIRED COMPONENTS
 ```
 
 Nyugodtan kapcsoljátok be a C++11 fordítási opciót.
+
 ```cmake
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
 ```
 
+A package.xml fájl elején adjuk meg a node készítőjének adatait és a licensz típusát. Ha saját magatoknak készítetek ROS node-okat, akkor ezekkel nem kell foglalkoznotok, de ha meg szeretnétek osztani a csomagotokat másokkal, akkor praktikus ezt kitölteni.
 
-package.xml:
+A licenszekről bővebben:
+
+http://wiki.ros.org/DevelopersGuide  
+https://www.ros.org/reps/rep-0140.html#license-multiple-but-at-least-one
+
 ```xml
 <?xml version="1.0"?>
 <package format="2">
@@ -320,10 +344,8 @@ package.xml:
   <license>BSD</license>
 ```
 
-http://wiki.ros.org/DevelopersGuide  
-https://www.ros.org/reps/rep-0140.html#license-multiple-but-at-least-one
+A package.xml szintén tartalmazza a létrehozáskor megadott függőségeket.  
 
-Függőségek:
 ```xml
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>actionlib</build_depend>
@@ -343,19 +365,33 @@ Függőségek:
   <exec_depend>std_msgs</exec_depend>
 ```
 
+Ezt azért praktikus megadni, és ha kell bővíteni a szükséges függőségekkel, hogy a ROS már fordítás előtt tudja, hogy milyen csomagokra van szükség. Ilyenkor a szükséges csomagok telepíthetők a következő paranccsal:
+
 `rosdep install -y --from-paths src --ignore-src --rosdistro melodic -r`
 
-cd ~/catkin_ws
+Enélkül csak fordítás közben derül ki, ha valami hiányzik.
 
-catkin_make
+Fordítsuk le a catkin workspace-ünket az új (egyelőre még üres) csomagunkkal. Ezt a catkin workspace gyökerében tudjuk megtenni:
 
-source devel/setup.bash
+`cd ~/catkin_ws`
 
-roscd bme_ros_tutorials
+`catkin_make`
 
-cd src
+Fordítás után be kell töltsük az új környezetet, ami már tartalmazza az új csomagunkat:
 
-touch basic_node.cpp
+`source devel/setup.bash`
+
+A roscd paranccsal könnyen meggyőződhetünk róla, hogy a csomagunkat látja a ROS:
+
+`roscd bme_ros_tutorials`
+
+Hozzuk létre a basic_node.cpp fájlt a src mappában:
+
+`cd src`
+
+`touch basic_node.cpp`
+
+A basic_node.cpp fájl tartalma:
 
 ```cpp
 #include <ros/ros.h>
@@ -378,7 +414,7 @@ int main(int argc, char** argv)
 	}
 }
 ```
-
+Egészítsük ki a CMakeLists.txt fájlt, hogy tartalmazza az új futtatható kódunkat:
 
 ```cmake
 ###########
@@ -397,15 +433,21 @@ target_link_libraries(basic_node ${catkin_LIBRARIES})
 
 ```
 
-cd ~/catkin_ws  
-catkin_make
+És utána fordítsuk újra a catkin orkspace-t (a workspace gyökréből):
+
+`cd ~/catkin_ws`  
+`catkin_make`
+
+Indítsuk el az első node-unkat a `rosrun bme_ros_tutorials basic_node` paranccsal:
 
 ```console
 david@DavidsLenovoX1:~/catkin_ws$ rosrun bme_ros_tutorials basic_node 
 [ERROR] [1608721117.404835100]: [registerPublisher] Failed to contact master at [172.21.233.33:11311].  Retrying...
 ```
 
-roscore
+Aktív ROS Master nélkül azonban nem lehet elindítani a node-okat. Indítsunk egy ROS Mastert egy másik terminál ablakban:  
+`roscore`  
+Ezek után el is indul a node-unk:
 
 ```console
 david@DavidsLenovoX1:~/catkin_ws$ rosrun bme_ros_tutorials basic_node 
@@ -417,12 +459,13 @@ david@DavidsLenovoX1:~/catkin_ws$ rosrun bme_ros_tutorials basic_node
 [ INFO] [1608721187.275671600]: basic_node cpp is running. count = 3
 ...
 ```
+Csináljuk meg ugyanezt a példát Pythonban is a node scripts mappájában:  
+`roscd bme_ros_tutorials`  
+`mkdir scripts`  
+`cd scripts`  
+`touch basic_node.py`
 
-roscd bme_ros_tutorials  
-mkdir scripts  
-cd scripts  
-touch basic_node.py  
-
+A basic_node.py tartalma:
 
 ```python
 #!/usr/bin/env python
@@ -443,6 +486,8 @@ while not rospy.is_shutdown(): # run the node until Ctrl-C is pressed
 	rate.sleep() # The loop runs at 1Hz
 ```
 
+Indítsuk el a node-ot a `rosrun bme_ros_tutorials basic_node.py` paranccsal:
+
 ```console
 david@DavidsLenovoX1:~/catkin_ws/src/bme_ros_tutorials$ rosrun bme_ros_tutorials basic_node.py
 [rosrun] Couldn't find executable named basic_node.py below /home/david/bme_catkin_ws/src/bme_ros_tutorials
@@ -451,25 +496,23 @@ david@DavidsLenovoX1:~/catkin_ws/src/bme_ros_tutorials$ rosrun bme_ros_tutorials
 [rosrun]   /home/david/bme_catkin_ws/src/bme_ros_tutorials/scripts/basic_node.py
 ```
 
-chmod +x basic_node.py
+A létrehozott fájl nem futtatható, ezért először be kell állítsuk a fájl futtathatóságát:  
+`chmod +x basic_node.py`
+
+Ezután próbáljuk meg újra elindítani.  
+Ha a következő hibát látjátok az azért van, mert a fájl a Windowsnak megfelelő sorfvégződéssel lett létrehozva (CRLF), ezt le kell cseréljük Unix típusú sorvégekre (LF). Ez a Visual Studio Code-ban egyszerűen megtehető a jobb alsó sarokban.
 
 ```console
 david@DavidsLenovoX1:~/catkin_ws/src/bme_ros_tutorials/scripts$ rosrun bme_ros_tutorials basic_node.py
 /usr/bin/env: ‘python\r’: No such file or directory
 ```
 
-A sorvégződések LF (Unix) legyenek CRLF (Windows) helyett!
+Vegyük észre, hogy Python kódok esetén nem kell catkin_make-et futtatnunk, legalábbis, ha ennyire egyszerű a Python kódunk. Ha vannak importált saját library-k, akkor kicsit bonyolultabb a helyzet, de ezt majd később megnézzük.
 
-Nem kell catkin_make-et futtatnunk, ha ennyire egyszerű a python kódunk. Ha vannak importált saját library-k, akkor kicsit bonyolultabb a helyzet, de ezt majd később megnézzük.
-
-
+___
 
 
-
-
-
-
-
+## Publisher
 
 
 
@@ -506,9 +549,6 @@ target_link_libraries(action_server_node_cpp ${catkin_LIBRARIES})
 add_executable(action_client_node_cpp src/cpp_action_client.cpp)
 target_link_libraries(action_client_node_cpp ${catkin_LIBRARIES})
 ```
-
-
-- ## Publisher
 
 - ## Subscriber
 
