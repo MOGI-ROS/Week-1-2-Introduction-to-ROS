@@ -881,6 +881,57 @@ as those have their own threads.
 rospy.spin() 
 ```
 
+Ezúttal indítsuk el a C++ publisherünket és mind a Python mind a C++ subscriberünket, ehhez már 3 terminálra lesz szükségünk (plusz a roscore)!
+
+`rosrun bme_ros_tutorials publisher`  
+`rosrun bme_ros_tutorials subscriber`
+`rosrun bme_ros_tutorials subscriber.py`
+
+Nézzük meg a `rostopic info /publisher_topic`-ot:
+
+```console
+david@DavidsLenovoX1:~$ rostopic info /publisher_topic 
+Type: std_msgs/Int32
+
+Publishers: 
+ * /publisher (http://172.21.233.33:36551/)
+
+Subscribers: 
+ * /subscriber_py (http://172.21.233.33:43819/)
+ * /subscriber (http://172.21.233.33:37199/)
+```
+
+Vegyük észre, hogy ezúttal más nevet adtunk a Python subscriber node-nak! Mi történne, ha azonos neve lenne mindkét node-nak?
+
+A másodikként induló node leállítaná a már futó és azonos néven regisztrált node-ot:
+
+```console
+[ WARN] [1608744310.401095700]: Shutdown request received.
+[ WARN] [1608744310.401328800]: Reason given for shutdown: [[/subscriber] Reason: new node registered with same name]
+```
+
+Próbáljuk még ki azt, hogy csak az egyik subscriberünk fut, ilyenkor nincs bejövő adat, hiszen nem fut a publisher node.
+A következő paranccsal viszont a parancssorból tudunk megadott topicra adatot küldeni, publisher node futtatása nélkül!
+
+`rostopic pub /publisher_topic std_msgs/Int32 "data: 111" -1`
+
+```console
+david@DavidsLenovoX1:~$ rostopic pub /publisher_topic std_msgs/Int32 "data: 111" -1
+publishing and latching message for 3.0 seconds
+```
+
+A `-1` kapcsolónak köszönhetően csak 1 üzenetet publisholtunk, azonban megtehetjük azt is, hogy folyamatosan publisholunk megadott frekvenciával. Ezt a frekvenciát a rate `-r` kapcsoló és az utána álló szám határozza meg. Például 10 Hz-cel a következőképp publisholhatunk parancssorból:
+
+`rostopic pub /publisher_topic std_msgs/Int32 "data: 111" -r 10`
+
+Ctrl+C-vel tudjuk megszakítani a parancssori publisht ebben az esetben.
+
+Ahogy ebben a példában láttuk a ROS segítségével könnyen megoldható, hogy egy C++ alapú node adatokat adjon át egy Pythonban írt node-nak, sőt nagyobb rendszerek esetén is tetszőlegesen keverhetjük a különböző nyelveken megírt node-jainkat. Ez az egyik hatalmas előnye a ROS-nak és annak, hogy nem egy hatalmas monolitikus alkalmazást fejlesztünk.
+
+___
+
+# WORK IN PROGRESS
+
 
 ```cmake
 ###########
