@@ -13,10 +13,10 @@ h2 {color:DeepSkyBlue;}
 [//]: # (Image References)
 
 [image1]: ./assets/markdown.svg "Markdwonn"
-[image2]: ./assets/youtube-openmanipulator.png "YouTube - OpenMANIPULATOR-X"
-[image3]: ./output_files/color_figures_test2.jpg "Color thresholds"
-[image4]: ./output_files/color_th_figures_test1.jpg "S threshold"
-[image5]: ./output_files/gradient_th_figures_straight_lines2.jpg "Gradient thresholds"
+[image2]: ./assets/terminator.png "Terminator"
+[image3]: ./assets/vcxsrv_1.png "VcXsrv"
+[image4]: ./assets/vcxsrv_2.png "VcXsrv"
+[image5]: ./assets/vcxsrv_3.png "VcXsrv"
 [image6]: ./output_files/pipeline_figures_straight_lines1.jpg "Binary result"
 [image7]: ./examples/color_fit_lines.jpg "Fit Visual"
 [image8]: ./examples/example_output.jpg "Output"
@@ -66,7 +66,7 @@ Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és mostmár telepíthet�
 <summary>Markdown</summary>
 
   ![alt text][image1]  
-  A Markdown egy 2004-ben létrehozott, szövegek annotálására szolgáló jelölőnyelv. Könnyen olvasható és írható, fő alkalmazási területei a kolaborációs eszközök, a műszaki és tudományos publikálás. Ezt használja például a GitHub (GFM = GitHub Flavoured Markdown) is dokumentálásra, érdemes megtanulni, mert jelenleg ez a de facto standard a szakmában dokumentálásra. Érdemes odafigyelni, hogy a GFM esetén sok html tag nem használható! Nem lehet például átszínezni a szöveget, vagy tetszőleges méretet változtatni.
+  A Markdown egy 2004-ben létrehozott, szövegek annotálására szolgáló jelölőnyelv. Könnyen olvasható és írható, fő alkalmazási területei a kollaborációs eszközök, a műszaki és tudományos publikálás. Ezt használja például a GitHub (GFM = GitHub Flavoured Markdown) is dokumentálásra, érdemes megtanulni, mert jelenleg ez a de facto standard a szakmában dokumentálásra. **Azért is érdemes megtanulni, mert ennek segítségével kell dokumentálni a házifeladatot is.** Érdemes odafigyelni, hogy a GFM esetén sok html tag nem használható! Nem lehet például átszínezni a szöveget, vagy tetszőleges méretet változtatni.
 
   Hasznos linkek a Markdownról:
 
@@ -149,57 +149,88 @@ Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és mostmár telepíthet�
 <summary>GIT</summary>
 
   - ### GIT parancssorból  
-    git clone <remote-repo-url>
-    git clone -b <branchname> <remote-repo-url>
-    git clone --recurse-submodules <remote-repo-url>
-    git pull
-    git add hello.py
-    git add .
-    git commit -m "commit message"
-    git push
+    A tárgy során GIT verziókevtő rendszert fogunk használni, és a házifeladatot is ebben kell megcsinálni. Regisztráció a [GitHub](https://www.github.com)-on a privát email címetekkel.  
+    A legfontosabb GIT parancsok:  
+
+    GIT repo letöltése a default branch-csel:  
+    `git clone <remote-repo-url>`  
+    GIT repo letöltése a kiválasztott branch-csel:  
+    `git clone -b <branchname> <remote-repo-url>`  
+    GIT repo letöltése submodule-okkal:  
+    `git clone --recurse-submodules <remote-repo-url>`  
+    Lokális GIT repo frissítése a szerveren történt változtatásokkal  
+    `git pull`  
+    Lokális fájlok hozzáadása commit-ra:  
+    `git add hello.py`  
+    Minden fájl hozzáadása:  
+    `git add .`  
+    GIT commit:  
+    `git commit -m "commit message"`  
+    Változások feltöltése a szerverre:  
+    `git push`  
+    Lokális változások törlése és a legutolsó commitra visszaállítása:  
+    `git reset --hard`  
 
   - ### GitKraken  
-    https://www.gitkraken.com/  
-    Elérhető Windowsra és Linuxra is  
-    Publikus repohoz ingyenesen használható
+    Ha valaki nem szereti a parancssoros GIT-et, akkor javaslom a [GitKrakent](https://www.gitkraken.com/)-t.  
+    Elérhető Windowsra és Linuxra is és publikus repohoz ingyenesen használható!  
 
 </details>
 
 <details>
 <summary>Windows 10 WSL 2</summary>
 
-WSL telepítése:  
+A WSL (2) a Windows Subsystem for Linux (2), ez egy teljesértékű Linux kernel, amivel Linux disztribúciót, pl Ubuntu 18.04, futtathatunk a Windowson belül. A tárgy során olyan Linuxos alkalmazásokat fogunk használni, amiknek szüksége van a GPU 3D gyorsítására, ezért a WSL1 nem felel meg a célnak, de a WSL2 már igen!
+
+A WSL telepítése:  
 https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
-Mi a WSL? Mi a WSL2?
+Az Ubuntu 18.04 és a 20.04 is elérhető a Microsoft Store-ból. A tárgy során a 18.04 használata javasolt.
 
 </details>
 
 <details>
 <summary>XServer (VcXsrv)</summary>
 
-Letöltés:
-https://sourceforge.net/projects/vcxsrv/
+Ahhoz, hogy grafikus Linux alkalmazásokat futassunk szükségünk van egy X szerverre Windowson. Ilyen a [VcXsrv](https://sourceforge.net/projects/vcxsrv/).  
 
-Képek a konfigról
+A VcXsrv konfigja:  
+![alt text][image3]  
+![alt text][image4]  
+![alt text][image5]  
 
-Bash script a display inithez
+Ahhoz, hogy a WSL-ben futó Linux tudjon csatlakozni az X szerverhez, adjuk hozzá a következő pár sort a ~/.bashrc fájlhoz. A .bashrc megnyitása nano szövegszerkesztővel:  
+`cd ~`  
+`nano .bashrc`  
 
+```bash
+export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+export LIBGL_ALWAYS_INDIRECT=
+export LIBGL_ALWAYS_SOFTWARE=1
+```
 
 </details>
 
 <details>
 <summary>Terminator</summary>
 
+A Terminator egy nagyon hasznos Linuxos terminál, ezt javaslom a tárgy hazsnálata során, mert rengeteg parancssorral fogunk dolgozni.
+
+![alt text][image2]
+
+A Terminator telepítése Linuxon:
+
   `sudo apt install terminator`
 
-  `Ctrl+Shift+e`
-
-  `Ctrl+Shift+o`
-
-  `Ctrl+Shift+w`
-
-  `Ctrl+Shift+q`
+Hasznos Terminator parancsok:  
+Parancssor függőleges felosztása:  
+  `Ctrl+Shift+e`  
+Parancssor vízszintes felosztása:  
+  `Ctrl+Shift+o`  
+Parancssor bezárása:  
+  `Ctrl+Shift+w`  
+Terminator (és az összes parancssor) bezárása:  
+  `Ctrl+Shift+q`  
 
 </details>
 
@@ -207,18 +238,29 @@ Bash script a display inithez
 <summary>ROS Melodic</summary>
 
   - ### A ROS telepítése  
+
+
 http://wiki.ros.org/melodic/Installation
   
   - ### Catkin workspace parancsok
 
+cd ~
+mkdir -p catkin_ws/src
+cd catkin_ws
+catkin_make
+
+
+catkin_make  
+catkin_create_pkg
+
   - ### ROS parancsok
-roscd
-rosrun
-roslaunch
-rosnode list
-rosnode info /NODE
-rostopic list
-rostopic info /TOPIC
+roscd  
+rosrun  
+roslaunch  
+rosnode list  
+rosnode info /NODE  
+rostopic list  
+rostopic info /TOPIC  
 
 </details>
 
@@ -228,7 +270,7 @@ rostopic info /TOPIC
 
 - ## ROS Master
 
-A ROS Master felel az egyes node-ok regisztrációjáért, összeköti a publishereket és a subscriberek, ez írja le a teljes rendszerünk gráfját. Emellett ez tárolja a paramétereket is. Miután a ROS Master összekötötte az egyes node-okat, a node-ok peer-to-peer kommunikálnak, nem a ROS Masteren keresztül.  
+A ROS Master felel az egyes node-ok regisztrációjáért, összeköti a publishereket és a subscriberek, ez írja le a teljes rendszerünk gráfját. Emellett ez tárolja a paramétereket is. Miután a ROS Master összekötötte az egyes node-okat, a node-ok peer-to-peer kommunikálnak, nem a ROS Masteren keresztül. További részletek a [wikin](http://wiki.ros.org/Master).  
 A ROS Mastert a `roscore` paranccsal indítjuk el.
 
 ```console
@@ -567,6 +609,14 @@ rosnode list, rostopic list, rostopic info
 
 ***
 ## Turtlesim
+
+rosrun turtlesim turtlesim_node
+
+rosrun turtlesim draw_square 
+
+rosrun turtlesim turtle_teleop_key
+
+
 
 ### Twist üzenetek
 
