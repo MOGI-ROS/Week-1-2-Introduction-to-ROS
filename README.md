@@ -524,7 +524,7 @@ import rospy
 
 count=0
 rospy.init_node('basic_node')  # Init the node with name "basic_node"
-rate = rospy.Rate(1)           # 1hz
+rate = rospy.Rate(1)           # 1Hz
 
 while not rospy.is_shutdown(): # run the node until Ctrl-C is pressed
 
@@ -577,7 +577,7 @@ Hozzuk létre a publisher.cpp fájlt a src mappában:
 A publisher.cpp fájl tartalma:  
 ```cpp
 #include "ros/ros.h"
-#include "std_msgs/Int32.h"             // Messages type used in the node
+#include "std_msgs/Int32.h"           // Message type used in the node
 
 int main(int argc, char **argv)
 {
@@ -627,9 +627,121 @@ add_executable(publisher src/publisher.cpp)
 target_link_libraries(publisher ${catkin_LIBRARIES})
 ```
 
-Fordítsuk újra a catkin workspace-t, és indítsuk el a node-t!
+Fordítsuk újra a catkin workspace-t, töltsük be a környezetet és indítsuk el a node-ot!
 
-`rosrun bme_ros_tutorials publisher` 
+`rosrun bme_ros_tutorials publisher`
+
+```console
+david@DavidsLenovoX1:~/catkin_ws$ rosrun bme_ros_tutorials publisher
+[ INFO] [1608741335.639818400]: Publisher C++ node has started and publishing data on publisher_topic
+```
+
+Nézzük meg a `rosnode list` parancsot, látjuk a listában a publisher node-ot:
+
+```console
+david@DavidsLenovoX1:~$ rosnode list
+/publisher
+/rosout
+```
+
+A `rosnode info /publisher` paranccsal nézzük meg a node-unk részleteit:
+
+```console
+david@DavidsLenovoX1:~$ rosnode info /publisher
+--------------------------------------------------------------------------------
+Node [/publisher]
+Publications: 
+ * /publisher_topic [std_msgs/Int32]
+ * /rosout [rosgraph_msgs/Log]
+
+Subscriptions: None
+```
+
+Látjuk, hogy a publisher_topic-ba küld adatokat és semmire sincs feliratkozva.
+
+Nézzük meg a topicokat is a `rostopic list` paranccsal:
+
+```console
+david@DavidsLenovoX1:~$ rostopic list
+/publisher_topic
+/rosout
+/rosout_agg
+```
+
+Nézzük meg a publisher_topic részleteit a `rostopic info /publisher_topic` paranccsal:  
+
+```console
+david@DavidsLenovoX1:~$ rostopic info /publisher_topic
+Type: std_msgs/Int32
+
+Publishers: 
+ * /publisher (http://172.21.233.33:45573/)
+
+Subscribers: None
+```
+
+Látjuk, hogy mi az adat típusa, ki állítja elő és azt is, hogy jelenleg senki sincs feliratkozva erre az adatra.
+
+Iratkozzunk fel az adatra parancssorból a `rostopic echo /publisher_topic` paranccsal:
+
+```console
+david@DavidsLenovoX1:~$ rostopic echo /publisher_topic
+data: 564
+---
+data: 565
+---
+data: 566
+---
+...
+```
+
+És nézzük meg egy újabb terminálban a `rostopic info /publisher_topic`-ot:
+
+```console
+david@DavidsLenovoX1:~$ rostopic info /publisher_topic
+Type: std_msgs/Int32
+
+Publishers: 
+ * /publisher (http://172.21.233.33:45573/)
+
+Subscribers: 
+ * /rostopic_4434_1608741899293 (http://172.21.233.33:46787/)
+```
+
+Láthatjuk, hogy az adatnak van egy subscriber-e, hiszen a parancssorban echozzuk az adatot.
+
+Csináljuk meg a publisher node-unk Python változatát is `publisher.py` néven!
+
+```python
+#!/usr/bin/env python
+
+import rospy
+from std_msgs.msg import Int32  # Message type used in the node
+
+rospy.init_node('publisher')    # Init the node with name "publisher"
+
+pub = rospy.Publisher('publisher_topic', Int32, queue_size=10)
+
+rospy.loginfo("Publisher Python node has started and publishing data on publisher_topic")
+
+rate = rospy.Rate(1)            # 1Hz
+
+count = Int32()                 # Count is now a ROS Int32 type variable that is ready to be published
+
+count.data = 0                  # Initializing count
+
+while not rospy.is_shutdown():  # Run the node until Ctrl-C is pressed
+
+	pub.publish(count)          # Publishing data on topic "publisher_topic"
+  
+	count.data += 1
+	
+	rate.sleep()                # The loop runs at 1Hz
+```
+
+Tegyük futtathatóvá, figyeljünk a sorvégekre és már indíthatjuk is a node-unkat!
+
+`rosrun bme_ros_tutorials publisher.py`
 
 
 ```cmake
@@ -644,11 +756,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(simple_node src/simple_node.cpp)
-target_link_libraries(simple_node ${catkin_LIBRARIES})
 
-add_executable(publisher_cpp src/cpp_publisher.cpp)
-target_link_libraries(publisher_cpp ${catkin_LIBRARIES})
 
 add_executable(subscriber_cpp src/cpp_subscriber.cpp)
 target_link_libraries(subscriber_cpp ${catkin_LIBRARIES})
