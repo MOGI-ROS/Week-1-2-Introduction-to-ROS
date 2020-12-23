@@ -821,18 +821,65 @@ Fordítsuk újra a catkin workspace-t, töltsük be a környezetet és indítsuk
 `rosrun bme_ros_tutorials subscriber`
 
 ```console
-david@DavidsLenovoX1:~/catkin_ws$ rosrun bme_ros_tutorials publisher
-[ INFO] [1608741335.639818400]: Publisher C++ node has started and publishing data on publisher_topic
+david@DavidsLenovoX1:~/catkin_ws$ rosrun bme_ros_tutorials subscriber 
+[ INFO] [1608743540.153272400]: Subscriber C++ node has started and subscribed to publisher_topic
+[ INFO] [1608743573.935493500]: Received data from publisher_topic: [1]
+[ INFO] [1608743574.934859200]: Received data from publisher_topic: [2]
+[ INFO] [1608743575.934844800]: Received data from publisher_topic: [3]
+[ INFO] [1608743576.934547200]: Received data from publisher_topic: [4]
+[ INFO] [1608743577.935232600]: Received data from publisher_topic: [5]
+...
 ```
 
-Nézzük meg a `rosnode list` parancsot, látjuk a listában a publisher node-ot:
+Nézzük meg a `rosnode list` parancsot, látjuk a listában a subscriber és a publisher node-ot is:
 
 ```console
 david@DavidsLenovoX1:~$ rosnode list
 /publisher
 /rosout
+/subscriber
 ```
 
+A `rostopic info /publisher_topic` alapján pedig azt is látjuk, hogy a publisher node generálja az adatot a subscriber node pedig fogyasztja:  
+
+```console
+david@DavidsLenovoX1:~$ rostopic info /publisher_topic 
+Type: std_msgs/Int32
+
+Publishers: 
+ * /publisher (http://172.21.233.33:40571/)
+
+Subscribers: 
+ * /subscriber (http://172.21.233.33:41967/)
+```
+
+Csináljuk meg a Python subscriberünket subscriber.py néven:
+
+```python
+#!/usr/bin/env python
+
+import rospy
+from std_msgs.msg import Int32 # Message type used in the node
+
+'''
+"sub_callback" is the callback method of the subscriber. Argument "msg" contains the received data.
+'''
+def sub_callback(msg):
+	rospy.loginfo("Received data from publisher_topic: %d", msg.data)
+
+rospy.init_node('subscriber_py') # Init the node with name "subscriber_py"
+
+rospy.Subscriber("publisher_topic", Int32, sub_callback, queue_size=10) 
+
+rospy.loginfo("Subscriber_py node has started and subscribed to publisher_topic")
+
+'''
+rospy.spin() simply keeps your node from exiting until the node has been shutdown.
+Unlike roscpp::spin(), rospy.spin() does not affect the subscriber callback functions,
+as those have their own threads.
+'''
+rospy.spin() 
+```
 
 
 ```cmake
