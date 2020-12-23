@@ -128,6 +128,9 @@ target_link_libraries(basic_node ${catkin_LIBRARIES})
 add_executable(publisher src/publisher.cpp)
 target_link_libraries(publisher ${catkin_LIBRARIES})
 
+add_executable(subscriber src/subscriber.cpp)
+target_link_libraries(subscriber ${catkin_LIBRARIES})
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/bme_ros_tutorials.cpp
