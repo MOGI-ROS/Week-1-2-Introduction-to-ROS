@@ -1,5 +1,5 @@
 #include "ros/ros.h"
-#include "std_msgs/Int32.h"             // Messages type used in the node
+#include "std_msgs/Int32.h"             // Message type used in the node
 
 int main(int argc, char **argv)
 {

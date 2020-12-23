@@ -4,7 +4,7 @@ import rospy
 
 count=0
 rospy.init_node('basic_node')  # Init the node with name "basic_node"
-rate = rospy.Rate(1)           # 1hz
+rate = rospy.Rate(1)           # 1Hz
 
 while not rospy.is_shutdown(): # run the node until Ctrl-C is pressed
 
