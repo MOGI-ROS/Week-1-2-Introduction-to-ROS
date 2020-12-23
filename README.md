@@ -239,28 +239,36 @@ Terminator (és az összes parancssor) bezárása:
 
   - ### A ROS telepítése  
 
-
 http://wiki.ros.org/melodic/Installation
+
+Ubuntu 18.04 esetén ROS Melodic  
+Ubuntu 20.04 esetén ROS Noetic  
+
+A ROS Melodic 2023-ig, a Noetic 2025-ig támogatott.  
   
   - ### Catkin workspace parancsok
 
-cd ~
-mkdir -p catkin_ws/src
-cd catkin_ws
-catkin_make
+Hozzunk létre egy catkin workspace-t:  
+
+`cd ~`  
+`mkdir -p catkin_ws/src`  
+`cd catkin_ws`  
+`catkin_make`  
 
 
-catkin_make  
-catkin_create_pkg
+`catkin_make`  
+`catkin_create_pkg`  
 
   - ### ROS parancsok
-roscd  
-rosrun  
-roslaunch  
-rosnode list  
-rosnode info /NODE  
-rostopic list  
-rostopic info /TOPIC  
+
+
+`roscd PACKAGE`    
+`rosrun PACKAGE NODE`  
+`roslaunch PACKAGE LAUNCHFILE`  
+`rosnode list`  
+`rosnode info /NODE`  
+`rostopic list`  
+`rostopic info /TOPIC`  
 
 </details>
 
@@ -556,6 +564,72 @@ ___
 
 ## Publisher
 
+A ROS publisher adatokat küld a többi node-nak. Csak azok az node-ok kapják meg a publisher által küldött adatokat, akik feliratkoznak rá, ezek a node-ok a subscriber-ek. Hozzuk létre az első publisherünket C++-ban:
+
+`roscd bme_ros_tutorials`
+
+Hozzuk létre a publisher.cpp fájlt a src mappában:
+
+`cd src`
+
+`touch publisher.cpp`
+
+A publisher.cpp fájl tartalma:  
+```cpp
+#include "ros/ros.h"
+#include "std_msgs/Int32.h"             // Messages type used in the node
+
+int main(int argc, char **argv)
+{
+	ros::init(argc, argv, "publisher"); // Init the node with name "publisher"
+	ros::NodeHandle nh;                 // NodeHandle will fully initialze the node
+
+    /**
+    * The advertise() function is how you tell ROS that you want to
+    * publish on a given topic name. This invokes a call to the ROS
+    * master node, which keeps a registry of who is publishing and who
+    * is subscribing. After this advertise() call is made, the master
+    * node will notify anyone who is trying to subscribe to this topic name,
+    * and they will in turn negotiate a peer-to-peer connection with this
+    * node.  advertise() returns a Publisher object which allows you to
+    * publish messages on that topic through a call to publish().  Once
+    * all copies of the returned Publisher object are destroyed, the topic
+    * will be automatically unadvertised.
+    *
+    * The second parameter to advertise() is the size of the message queue
+    * used for publishing messages.  If messages are published more quickly
+    * than we can send them, the number here specifies how many messages to
+    * buffer up before throwing some away.
+    */
+
+	ros::Publisher pub = nh.advertise<std_msgs::Int32>("publisher_topic", 10);
+	
+	ROS_INFO("Publisher C++ node has started and publishing data on publisher_topic");
+	
+	ros::Rate loop_rate(1); // 1 Hz
+	
+	std_msgs::Int32 count;  // Count is now a ROS Int32 type variable that is ready to be published
+	count.data=0;           // Initializing count
+	
+    while (ros::ok())       // Run the node until Ctrl-C is pressed
+    {		
+		pub.publish(count); // Publishing data on topic "publisher_topic"
+		count.data++;	
+		loop_rate.sleep();  // The loop runs at 1Hz
+	}
+}
+```
+
+Adjuk hozzá az új node-unkat a CMakeLists.txt fájlhoz:
+
+```cmake
+add_executable(publisher src/publisher.cpp)
+target_link_libraries(publisher ${catkin_LIBRARIES})
+```
+
+Fordítsuk újra a catkin workspace-t, és indítsuk el a node-t!
+
+`rosrun bme_ros_tutorials publisher` 
 
 
 ```cmake
