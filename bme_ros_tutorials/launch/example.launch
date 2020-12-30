@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- Start other launchfile -->
+  <include file="$(find bme_ros_tutorials)/launch/publisher.launch"/>
+  <!-- Start a single node -->
+  <node name="subscriber" pkg="bme_ros_tutorials" type="subscriber" output ="screen"/>
+</launch>
