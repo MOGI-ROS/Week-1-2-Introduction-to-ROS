@@ -943,36 +943,6 @@ Ahogy ebben a példában láttuk a ROS segítségével könnyen megoldható, hog
 
 ___
 
-# WORK IN PROGRESS
-
-
-```cmake
-###########
-## Build ##
-###########
-
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
-)
-
-
-add_executable(service_server_node_cpp src/cpp_service_server.cpp)
-target_link_libraries(service_server_node_cpp ${catkin_LIBRARIES})
-
-add_executable(service_client_node_cpp src/cpp_service_client.cpp)
-target_link_libraries(service_client_node_cpp ${catkin_LIBRARIES})
-
-add_executable(action_server_node_cpp src/cpp_action_server.cpp)
-target_link_libraries(action_server_node_cpp ${catkin_LIBRARIES})
-
-add_executable(action_client_node_cpp src/cpp_action_client.cpp)
-target_link_libraries(action_client_node_cpp ${catkin_LIBRARIES})
-```
-
-
 - ## rqt
 
 Az rqt egy grafikus tool, ami nagyon hasznos a ROS üzeneteinek megjelenítésére akár táblázatos, akár grafikus formában. Az rqt Python vagy C++ pluginekkel tetszőlegesen kiegészíthető.  
@@ -992,7 +962,7 @@ Ezzel grafikusan tudjuk ábrázolni azokat az adatainkat, amik számformátumúa
 
 - ## Launchfile  
 
-ROS node-okat nem csak a `rosrun` paranccsal tudunk indítani. Készíthetünk úgynevezett launchfile-okat. Ezek speciális XML fájlok, ahol egy launchfile-ban tetszőleges számú node-ot indíthatunk, vagy akár más launchfile-okat is elindíthatunk. Ezeket tipikusan egy node launch mappájában tartjuk, de bárhonnan indíthatók.
+ROS node-okat nem csak a `rosrun` paranccsal tudunk indítani. Készíthetünk úgynevezett launchfile-okat. Ezek speciális XML fájlok, ahol egy launchfile-ban tetszőleges számú node-ot indíthatunk, vagy akár más launchfile-okat is elindíthatunk. Ezeket tipikusan egy node launch mappájában tartjuk, de bárhonnan indíthatók a `roslaunch` paranccsal. Arra érdemes figyelni, ha olyan launchfile-t akarunk indítani, ami nem egy node része, akkor a fájl mappájából kell indítani a `roslaunch` parancsot.
 
 A launchfile felépítése:
 
@@ -1007,16 +977,263 @@ A launchfile felépítése:
 </launch>
 ```
 
+Indítsuk el először a `publisher.launch` fájlt:  
+`roslaunch bme_ros_tutorials publisher.launch`
+
+Ha nincs futó ROS masterünk, akkor a launchfile indítása automatikus indít egy ROS mastert is. Bizonyosodjunk meg a publisher node-unk futásáról az `rqt` segítségével.
+
+Most indítsuk el a fenti `example.launch` fájlt:  
+`roslaunch bme_ros_tutorials example.launch`
+
+A launchfile segítégével elindítottuk a ROS mastert, a publishert és a subscribert egyetlen paranccsal és egyetlen terminál ablakból!
+
+Megjegyzés: a launch fájl nem alkalmas arra, hogy időzítve indítsunk node-okat. Alapból a ROS mentalitásába nem illeszkedik az, hogy a node-jaink indításakor számítson az időzítés, de néha előfordul ilyen. Ilyenkor készíthetünk egy bash scriptet, ami elindítja az egyes launchfile-okat megfelelően időzítve. Példa:
+
+```bash
+#!/bin/bash
+
+# go to the root of catkin_ws and build the workspace
+cd $(pwd)/../../..; catkin_make
+
+# source catkin_ws and ros workspace
+source devel/setup.bash
+source /opt/ros/melodic/setup.bash
+
+# start the launchfiles in individual terminals using xterm
+xterm  -e  " roslaunch bme_ros_tutorials example1.launch" &    
+sleep 5
+xterm  -e  " roslaunch bme_ros_tutorials example2.launch" &    
+sleep 10
+xterm  -e  " roslaunch bme_ros_tutorials example3.launch"
+```
+___
+
 - ## Services
 
-- ## Actions
+http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28c%2B%2B%29
+
+`roscd bme_ros_tutorials`
+
+mkdir srv
+
+cd srv
+
+touch AddTwoInts.srv
+
+```properties
+int64 a
+int64 b
+---
+int64 sum
+```
+
+```cmake
+## Generate services in the 'srv' folder
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
+
+## Generate added messages and services with any dependencies listed here
+# generate_messages(
+#   DEPENDENCIES
+#   actionlib_msgs#   std_msgs
+# )
+
+```
+
+```cmake
+## Generate services in the 'srv' folder
+add_service_files(
+  FILES
+  AddTwoInts.srv
+)
+
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
+```
+
+catkin_make
+
+source devel/setup.bash
+
+rossrv show bme_ros_tutorials/AddTwoInts
+
+Hozzunk létre egy service_server.cpp és egy service_client.cpp fájlt.
+
+
+service_server.cpp
+
+```cpp
+#include "ros/ros.h"
+#include "bme_ros_tutorials/AddTwoInts.h"
+
+bool add(bme_ros_tutorials::AddTwoInts::Request  &req,
+         bme_ros_tutorials::AddTwoInts::Response &res)
+{
+  res.sum = req.a + req.b;
+  ROS_INFO("request: x=%ld, y=%ld", (long int)req.a, (long int)req.b);
+  ROS_INFO("sending back response: [%ld]", (long int)res.sum);
+  return true;
+}
+
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "add_two_ints_server");
+  ros::NodeHandle n;
+
+  ros::ServiceServer service = n.advertiseService("add_two_ints", add);
+  ROS_INFO("Ready to add two ints.");
+  ros::spin();
+
+  return 0;
+}
+```
+
+
+service_client.cpp
+
+```cpp
+#include "ros/ros.h"
+#include "bme_ros_tutorials/AddTwoInts.h"
+#include <cstdlib>
+
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "add_two_ints_client");
+  if (argc != 3)
+  {
+    ROS_INFO("usage: add_two_ints_client X Y");
+    return 1;
+  }
+
+  ros::NodeHandle n;
+  ros::ServiceClient client = n.serviceClient<bme_ros_tutorials::AddTwoInts>("add_two_ints");
+  bme_ros_tutorials::AddTwoInts srv;
+  srv.request.a = atoll(argv[1]);
+  srv.request.b = atoll(argv[2]);
+  if (client.call(srv))
+  {
+    ROS_INFO("Sum: %ld", (long int)srv.response.sum);
+  }
+  else
+  {
+    ROS_ERROR("Failed to call service add_two_ints");
+    return 1;
+  }
+
+  return 0;
+}
+
+```
+
+Adjuk hozzá az új node-okat a CMakeLists.txt-hez:
+
+```cmake
+add_executable(service_server src/service_server.cpp)
+target_link_libraries(service_server ${catkin_LIBRARIES})
+
+add_executable(service_client src/service_client.cpp)
+target_link_libraries(service_client ${catkin_LIBRARIES})
+```
+
+catkin_make
+
+source devel/setup.bash
+
+rosrun bme_ros_tutorials service_server
+
+rosrun bme_ros_tutorials service_client 3 4
+
+ToDo: python service!
+___
 
 - ## Messages
 
+http://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv
 
-rosnode list, rostopic list, rostopic info
+mkdir msg
 
-***
+cd msg
+
+touch Test.msg
+
+```properties
+string first_name
+string last_name
+uint8 age
+uint32 score
+```
+
+package.xml:
+
+```xml
+<build_depend>message_generation</build_depend>
+<exec_depend>message_runtime</exec_depend>
+```
+
+CMakeLists.txt
+
+```cmake
+find_package(catkin REQUIRED COMPONENTS
+  actionlib
+  actionlib_msgs
+  roscpp
+  rospy
+  std_msgs
+
+  message_generation
+)
+
+...
+
+catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES bme_ros_tutorials
+#  CATKIN_DEPENDS actionlib actionlib_msgs roscpp rospy std_msgs
+  DEPENDS message_runtime
+)
+
+```
+
+```cmake
+## Generate messages in the 'msg' folder
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
+```
+
+```cmake
+## Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+  Test.msg
+)
+```
+
+catkin_make
+
+source devel/setup.bash
+
+rosmsg show bme_ros_tutorials/Test
+
+
+Python node
+
+rqt
+
+mi van ha nincs sourceolva!
+
+
+___
+
+
 ## Turtlesim
 
 rosrun turtlesim turtlesim_node
