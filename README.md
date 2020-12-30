@@ -17,9 +17,11 @@ h2 {color:DeepSkyBlue;}
 [image3]: ./assets/vcxsrv_1.png "VcXsrv"
 [image4]: ./assets/vcxsrv_2.png "VcXsrv"
 [image5]: ./assets/vcxsrv_3.png "VcXsrv"
-[image6]: ./output_files/pipeline_figures_straight_lines1.jpg "Binary result"
-[image7]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image8]: ./examples/example_output.jpg "Output"
+[image6]: ./assets/rqt_1.png "rqt"
+[image7]: ./assets/rqt_2.png "rqt"
+[image8]: ./assets/rqt_3.png "rqt"
+[image9]: ./assets/rqt_4.png "rqt"  
+
 
 # 1. hét - bevezetés
 
@@ -158,6 +160,8 @@ Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és mostmár telepíthet�
     `git clone -b <branchname> <remote-repo-url>`  
     GIT repo letöltése submodule-okkal:  
     `git clone --recurse-submodules <remote-repo-url>`  
+    Lokális GIT repoban lévő fájlok állapota, kiválasztott branch  
+    `git status`  
     Lokális GIT repo frissítése a szerveren történt változtatásokkal  
     `git pull`  
     Lokális fájlok hozzáadása commit-ra:  
@@ -170,6 +174,13 @@ Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és mostmár telepíthet�
     `git push`  
     Lokális változások törlése és a legutolsó commitra visszaállítása:  
     `git reset --hard`  
+    Új branch létrehozása lokálisan:  
+    `git checkout -b <branchname>`  
+    Új branch feltöltése a GIT szerverre:  
+    `git push --set-upstream origin <branchname>`  
+    Branchek közti váltás:  
+    `git switch main`  
+
 
   - ### GitKraken  
     Ha valaki nem szereti a parancssoros GIT-et, akkor javaslom a [GitKrakent](https://www.gitkraken.com/)-t.  
@@ -257,11 +268,11 @@ Hozzunk létre egy catkin workspace-t:
 
 
 `catkin_make`  
-`catkin_create_pkg`  
+`catkin_create_pkg PACKAGE DEPENDENCY1 DEPENDENCY2 ...`  
 
   - ### ROS parancsok
 
-
+`roscore`  
 `roscd PACKAGE`    
 `rosrun PACKAGE NODE`  
 `roslaunch PACKAGE LAUNCHFILE`  
@@ -269,6 +280,8 @@ Hozzunk létre egy catkin workspace-t:
 `rosnode info /NODE`  
 `rostopic list`  
 `rostopic info /TOPIC`  
+`rostopic echo /TOPIC`  
+`rostopic pub /TOPIC MSG "DATA"`  
 
 </details>
 
@@ -946,10 +959,6 @@ include_directories(
 )
 
 
-
-add_executable(subscriber_cpp src/cpp_subscriber.cpp)
-target_link_libraries(subscriber_cpp ${catkin_LIBRARIES})
-
 add_executable(service_server_node_cpp src/cpp_service_server.cpp)
 target_link_libraries(service_server_node_cpp ${catkin_LIBRARIES})
 
@@ -966,7 +975,37 @@ target_link_libraries(action_client_node_cpp ${catkin_LIBRARIES})
 
 - ## rqt
 
-- ## Launchfile
+Az rqt egy grafikus tool, ami nagyon hasznos a ROS üzeneteinek megjelenítésére akár táblázatos, akár grafikus formában. Az rqt Python vagy C++ pluginekkel tetszőlegesen kiegészíthető.  
+
+Indítsunk egy ROS mastert és a korábbi  publisher node-unkat.  
+
+Utána egy újabb terminál ablakban indítsuk el az rqt-t az `rqt` paranccsal.  
+
+Az alap pluginek közül az egyik legfontosabb a `Topic Monitor`.  
+![alt text][image6]  
+A topic monitorban láthatjuk az egyes ROS topicokban közölt adatokat, a topicok adatforgalmát és frekvenciáját.  
+![alt text][image7]  
+Egy másik hasznos alap plugin a `Plot`.  
+![alt text][image8]  
+Ezzel grafikusan tudjuk ábrázolni azokat az adatainkat, amik számformátumúak.  
+![alt text][image9]  
+
+- ## Launchfile  
+
+ROS node-okat nem csak a `rosrun` paranccsal tudunk indítani. Készíthetünk úgynevezett launchfile-okat. Ezek speciális XML fájlok, ahol egy launchfile-ban tetszőleges számú node-ot indíthatunk, vagy akár más launchfile-okat is elindíthatunk. Ezeket tipikusan egy node launch mappájában tartjuk, de bárhonnan indíthatók.
+
+A launchfile felépítése:
+
+```xml
+<?xml version="1.0"?>
+
+<launch>
+  <!-- Start other launchfile -->
+  <include file="$(find bme_ros_tutorials)/launch/publisher.launch"/>
+  <!-- Start a single node -->
+  <node name="subscriber" pkg="bme_ros_tutorials" type="subscriber" output ="screen"/>
+</launch>
+```
 
 - ## Services
 
