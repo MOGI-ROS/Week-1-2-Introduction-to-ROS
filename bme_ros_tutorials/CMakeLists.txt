@@ -136,6 +136,9 @@ target_link_libraries(service_server ${catkin_LIBRARIES})
 add_executable(service_client src/service_client.cpp)
 target_link_libraries(service_client ${catkin_LIBRARIES})
 
+add_executable(publisher_custom src/publisher_custom.cpp)
+target_link_libraries(publisher_custom ${catkin_LIBRARIES})
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/bme_ros_tutorials.cpp
