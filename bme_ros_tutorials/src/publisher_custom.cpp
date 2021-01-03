@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 	
     while (ros::ok())       // Run the node until Ctrl-C is pressed
     {		
-		pub.publish(count); // Publishing data on topic "publisher_topic"
+		pub.publish(test_message); // Publishing data on topic "publisher_topic"
 		test_message.score++;	
 		loop_rate.sleep();  // The loop runs at 1Hz
 	}
