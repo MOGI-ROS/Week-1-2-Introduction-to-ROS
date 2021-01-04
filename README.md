@@ -1542,7 +1542,7 @@ Indítsunk a keyboard teleop mellé egy rqt-t is! És vizsgáljuk meg ezeket az 
 
 ![alt text][image17]
 
-Az robot x és y koordinátáit tetszőlegesen ki is rajzolhatjuk! Erre az rqt Multiplot pluginje a legalkalmasabb, az ugyanis képes nem csak timestamp alapján ábrázolni értékeket!
+Az robot x és y koordinátáit tetszőlegesen ki is rajzolhatjuk! Erre az rqt [Multiplot](https://github.com/ANYbotics/rqt_multiplot_plugin) pluginje a legalkalmasabb, az ugyanis képes nem csak timestamp alapján ábrázolni értékeket!
 
 ![alt text][image18]
 ![alt text][image19]
