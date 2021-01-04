@@ -1010,22 +1010,29 @@ ___
 
 - ## Services
 
-http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28c%2B%2B%29
+A hagyományos publisher/subscriber kommunikáció a legtöbb esetben jó megoldás a node-jaink közötti kommunikációra, viszont ezek egyirányú több node-tól több node-hoz menő adatátvitelre alkalmasak. Elosztott robotikai rendszerekben előfordul, hogy RPC-re (Remote Procedure Call) van szükségünk, ahol egy klienstől érkező kérésre (request) a vágrehajtó szerver választ (reply) is ad. A ROS service-ekről részletesen olvashattok a [ROS wiki](http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28c%2B%2B%29)-n, az ott található tutorialokon fogunk végigmenni közösen.
 
-`roscd bme_ros_tutorials`
+A service-ek request/reply üzenetpárosa a ROS-ban service (`.srv`) fájlokban van leírva, általában egy node `srv` mappájban. Ebben a fejezetben csináljunk egy olyan service-t, ami 2 egész számot vár request-ként, és a két szám összege a reply.
 
-mkdir srv
+Hozzuk létre az `AddTwoInts.srv` fájlt:  
+`roscd bme_ros_tutorials`  
+`mkdir srv`  
+`cd srv`  
+`touch AddTwoInts.srv`  
 
-cd srv
-
-touch AddTwoInts.srv
+A fájl tartalma:
 
 ```properties
 int64 a
 int64 b
 ---
 int64 sum
-```
+```  
+
+A requestet a --- szimbolum választja el a reply-tól a service létrehozásakor. Egy service tetszőleges request és tetszőleges reply paraméterrel rendelkezhet.
+
+A service hozzáadásához módosítsuk a CMakeLists.txt fájlunkat!
+
 
 ```cmake
 ## Generate services in the 'srv' folder
@@ -1057,16 +1064,19 @@ generate_messages(
 )
 ```
 
-catkin_make
+Ezek után fordítsuk újra a catkin workspace-ünket és adjuk hozzá a környezethez a módosításokat:  
+`catkin_make`  
+`source devel/setup.bash`  
 
-source devel/setup.bash
+Ezután a rossrv parancs segítségével megbizonyosodhatunk róla, hogy létezik a servce-ünk:  
+`rossrv show bme_ros_tutorials/AddTwoInts`
 
-rossrv show bme_ros_tutorials/AddTwoInts
+A válasz a service fáljunk tartalma lesz.
 
-Hozzunk létre egy service_server.cpp és egy service_client.cpp fájlt.
+### CPP példa
 
-
-service_server.cpp
+Hozzunk létre egy `service_server.cpp` és egy `service_client.cpp` fájlt.  
+A `service_server.cpp` tartalma:
 
 ```cpp
 #include "ros/ros.h"
@@ -1093,9 +1103,7 @@ int main(int argc, char **argv)
   return 0;
 }
 ```
-
-
-service_client.cpp
+A `service_client.cpp` tartalma:
 
 ```cpp
 #include "ros/ros.h"
@@ -1141,15 +1149,88 @@ add_executable(service_client src/service_client.cpp)
 target_link_libraries(service_client ${catkin_LIBRARIES})
 ```
 
-catkin_make
+Utána pedig fordítsuk újra a catkin workspace-ünket:  
+`catkin_make`  
+`source devel/setup.bash`  
 
-source devel/setup.bash
+Indítsunk egy ROS mastert, majd a service szerverünket:  
+`rosrun bme_ros_tutorials service_server`  
 
-rosrun bme_ros_tutorials service_server
+És végül indítsuk el a service klienst 2 parancssori paraméterrel:  
+`rosrun bme_ros_tutorials service_client 3 4`
 
-rosrun bme_ros_tutorials service_client 3 4
+### Python példa
 
-ToDo: python service!
+Hozzunk létre egy `service_server.py` és egy `service_client.py` fájlt a scripts mappában.
+Állítsuk be a fájlok futtathatóságát a `chmod +x FILE` paranccsal.
+
+A `service_server.py` fájl tartalma:
+```python
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+from bme_ros_tutorials.srv import AddTwoInts,AddTwoIntsResponse
+import rospy
+
+def handle_add_two_ints(req):
+    print("Returning [%s + %s = %s]"%(req.a, req.b, (req.a + req.b)))
+    return AddTwoIntsResponse(req.a + req.b)
+
+def add_two_ints_server():
+    rospy.init_node('add_two_ints_server')
+    s = rospy.Service('add_two_ints', AddTwoInts, handle_add_two_ints)
+    print("Ready to add two ints.")
+    rospy.spin()
+
+if __name__ == "__main__":
+    add_two_ints_server()
+```
+
+A `service_client.py` fájl tartalma:
+```python
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import sys
+import rospy
+from bme_ros_tutorials.srv import *
+
+def add_two_ints_client(x, y):
+    rospy.wait_for_service('add_two_ints')
+    try:
+        add_two_ints = rospy.ServiceProxy('add_two_ints', AddTwoInts)
+        resp1 = add_two_ints(x, y)
+        return resp1.sum
+    except rospy.ServiceException as e:
+        print("Service call failed: %s"%e)
+
+def usage():
+    return "%s [x y]"%sys.argv[0]
+
+if __name__ == "__main__":
+    if len(sys.argv) == 3:
+        x = int(sys.argv[1])
+        y = int(sys.argv[2])
+    else:
+        print(usage())
+        sys.exit(1)
+    print("Requesting %s+%s"%(x, y))
+    print("%s + %s = %s"%(x, y, add_two_ints_client(x, y)))
+```
+
+Fordítsuk újra a catkin workspace-ünket:  
+`catkin_make`  
+`source devel/setup.bash`  
+
+Indítsunk egy ROS mastert, majd a service szerverünket:  
+`rosrun bme_ros_tutorials service_server.py`  
+
+És végül indítsuk el a service klienst 2 parancssori paraméterrel:  
+`rosrun bme_ros_tutorials service_client.py 3 4`
+
+A ROS service-eket RPC-re találták ki, ahol a request-re a reply azonnal (kis számítás után) megérkezik. Olyan esetekben, ha a requestet egy hosszú várakozás követi, például a robotunk A-ból B-be mozog, akkor ROS action-öket érdemes használni. A ROS actionökre nem térünk most ki részletesen, ezeket elég ritkán használjuk, és a ROS wiki segít, ha ilyet szeretnénk csinálni.
 ___
 
 - ## Messages
