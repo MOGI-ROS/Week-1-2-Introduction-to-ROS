@@ -27,7 +27,12 @@ h2 {color:DeepSkyBlue;}
 [image13]: ./assets/custom_publisher_4.png "custom publisher" 
 [image14]: ./assets/turtlesim_1.png "turtlesim" 
 [image15]: ./assets/turtlesim_2.png "turtlesim" 
-[image16]: ./assets/turtlesim_3.png "turtlesim" 
+[image16]: ./assets/turtlesim_3.png "turtlesim"
+[image17]: ./assets/turtlesim_4.png "turtlesim" 
+[image18]: ./assets/turtlesim_5.png "turtlesim" 
+[image19]: ./assets/turtlesim_6.png "turtlesim" 
+[image20]: ./assets/turtlesim_7.png "turtlesim" 
+[image21]: ./assets/turtlesim_8.png "turtlesim" 
 
 # 1. hét - bevezetés
 
@@ -1414,7 +1419,7 @@ Indítsunk egy ROS mastert és indítsuk el a turtlesim-et:
 `rosrun turtlesim turtlesim_node`
 
 Nézzük meg milyen node-jai vannak a turtlesim csomagnak:
-```bash
+```console
 david@DavidsLenovoX1:~/bme_catkin_ws$ rosrun turtlesim 
 draw_square        mimic              turtlesim_node     turtle_teleop_key
 ```
@@ -1431,7 +1436,7 @@ Indítsuk el a `draw_square` node-ot:
 
 Nézzük meg milyen service-ek tartoznak a turtlesimhez:
 
-```bash
+```console
 david@DavidsLenovoX1:~/bme_catkin_ws$ rosnode info /turtlesim 
 --------------------------------------------------------------------------------
 Node [/turtlesim]
@@ -1467,7 +1472,7 @@ Connections:
 ```
 
 További részleteket így deríthetünk ki a `clear` service-ről:
-```bash
+```console
 david@DavidsLenovoX1:~/bme_catkin_ws$ rosservice info /clear 
 Node: /turtlesim
 URI: rosrpc://172.26.152.188:47251
@@ -1483,7 +1488,7 @@ Indítsuk el a keyboard teleop node-ot a Turtlesim-hez:
 
 A nyilakkal irányíthatjuk a teknőst. Mivel a teknős egy idő után összefirkálja a vásznat bármikor letakaríthatjuk a vásznat az előző clear service-szel. Vizsgájuk most meg a `set_pen` service-t is!
 
-```bash
+```console
 david@DavidsLenovoX1:~/bme_catkin_ws$ rosservice info /turtle1/set_pen 
 Node: /turtlesim
 URI: rosrpc://172.26.152.188:47251
@@ -1499,7 +1504,7 @@ Az utolsó paramétert pedig ha 1-re állítjuk kikapcsolhatjuk a tollat:
 
 Vizsgáljuk meg milyen ROS topicok érhetők el. Csak a ROS master, a Turtlesim és a keyboard teleop node-ok fussanak!
 
-```bash
+```console
 david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic list
 /rosout
 /rosout_agg
@@ -1508,16 +1513,49 @@ david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic list
 /turtle1/pose
 ```
 
-Indítsunk a keyboard teleop mellé egy rqt-t is!
+Vizsgáljunk meg a `/turtle1/cmd_vel` és a `/turtle1/pose` topic-ot alaposabban!
 
+```console
+david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic info /turtle1/cmd_vel 
+Type: geometry_msgs/Twist
 
-### Twist üzenetek
+Publishers: 
+ * /teleop_turtle (http://172.26.152.188:37849/)
 
-### Keyboard teleop
+Subscribers: 
+ * /turtlesim (http://172.26.152.188:42245/)
+```
 
-### Hello World! Első saját ROS node-unk
+```console
+david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic info /turtle1/pose
+Type: turtlesim/Pose
 
+Publishers: 
+ * /turtlesim (http://172.26.152.188:42245/)
 
-http://wiki.ros.org/ROS/Introduction
+Subscribers: None
+```
 
-http://wiki.ros.org/ROS/Tutorials
+Tehát a `/turtle1/cmd_vel` segítségével irányítja a keyboard teleop node a szimulátort, ez egy [ROS Twist típusú üzenet](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/Twist.html), amit általánosan arra a célra használunk, hogy egy robot mozgását írjuk le 6D-ben, két 3 elemű linear és angular vektor segítségével. A `/turtle1/pose`-t pedig a szimulátor küldi és a teknős valós idejű pozicióját, orientációját és sebességét írja le. Ez nem a [ROS alap Pose típusú üzenete](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/Pose.html), hanem egy speciáis [Turtlesim által definiált üzenet](http://docs.ros.org/en/melodic/api/turtlesim/html/msg/Pose.html)! Mivel a Turtlesim egy 2D-s világ, ezért az orientáció leírása egyetlen szöggel, a z tengely körüli elfordulással leírható. A ROS alap Pose üzenete általánosabb, és az orentációt egy 4 elemű Quaternionnal írja le.
+
+Indítsunk a keyboard teleop mellé egy rqt-t is! És vizsgáljuk meg ezeket az üzeneteket ott is!
+
+![alt text][image17]
+
+Az robot x és y koordinátáit tetszőlegesen ki is rajzolhatjuk! Erre az rqt Multiplot pluginje a legalkalmasabb, az ugyanis képes nem csak timestamp alapján ábrázolni értékeket!
+
+![alt text][image18]
+![alt text][image19]
+![alt text][image20]
+![alt text][image21]
+
+A multiplot nem része az alap ROS telepítésnek, így ha nem lenne a listában, akkor így tudjuk feltelepíteni:  
+`sudo apt install ros-melodic-rqt-multiplot`
+
+Ha ezek után sincs a listában, akkor ezzel tudjuk kényszeríteni az rqt-t, hogy megtalálja a plugint:  
+`rosrun rqt_multiplot rqt_multiplot --force-discover`
+
+Utána már a listában kell lennie!
+
+A következő alkalommal készítünk egy saját node-ot a Turtlesim irányítására!
+
