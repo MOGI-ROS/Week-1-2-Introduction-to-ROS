@@ -21,7 +21,13 @@ h2 {color:DeepSkyBlue;}
 [image7]: ./assets/rqt_2.png "rqt"
 [image8]: ./assets/rqt_3.png "rqt"
 [image9]: ./assets/rqt_4.png "rqt"  
-
+[image10]: ./assets/custom_publisher_1.png "custom publisher" 
+[image11]: ./assets/custom_publisher_2.png "custom publisher" 
+[image12]: ./assets/custom_publisher_3.png "custom publisher" 
+[image13]: ./assets/custom_publisher_4.png "custom publisher" 
+[image14]: ./assets/turtlesim_1.png "turtlesim" 
+[image15]: ./assets/turtlesim_2.png "turtlesim" 
+[image16]: ./assets/turtlesim_3.png "turtlesim" 
 
 # 1. hét - bevezetés
 
@@ -1073,7 +1079,7 @@ Ezután a rossrv parancs segítségével megbizonyosodhatunk róla, hogy létezi
 
 A válasz a service fáljunk tartalma lesz.
 
-### CPP példa
+### C++ példa
 
 Hozzunk létre egy `service_server.cpp` és egy `service_client.cpp` fájlt.  
 A `service_server.cpp` tartalma:
@@ -1235,13 +1241,15 @@ ___
 
 - ## Messages
 
-http://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv
+A ROS számos üzenettípust támogat alapból, számok, stringek, tömbök egyszerűen küldhetők, sőt rengeteg speciális üzenettípus van a különböző szenzorok kezeléséhez is, pl. IMU, Lidar, kamera. Bizonyos esetben előfordulhat, hogy saját egyedi üzeneteket szeretnénk használni, ilyenkor létrehozhatjuk a saját üzenetformátumunkat. Erről további részleteket találhattok a [ROS wiki](http://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv)-n.
 
-mkdir msg
+Hozzuk létre a saját üzenettípusunkat a `Test.msg` fájlban, amit jellemzően az `msg` mappában tárolunk a node-on belül.
 
-cd msg
+`mkdir msg`  
+`cd msg`  
+`touch Test.msg`  
 
-touch Test.msg
+A `Test.msg` fájl tartalma:
 
 ```properties
 string first_name
@@ -1250,14 +1258,14 @@ uint8 age
 uint32 score
 ```
 
-package.xml:
+Saját üzenetek esetén ki kell egészítenünk a `package.xml` fájlunkat:  
 
 ```xml
 <build_depend>message_generation</build_depend>
 <exec_depend>message_runtime</exec_depend>
 ```
 
-CMakeLists.txt
+És a `CMakeLists.txt`-t is:
 
 ```cmake
 find_package(catkin REQUIRED COMPONENTS
@@ -1298,31 +1306,209 @@ add_message_files(
 )
 ```
 
-catkin_make
+A szokásos módon fordítsuk újra a catkin workspace-t:  
+`catkin_make`  
+`source devel/setup.bash`
 
-source devel/setup.bash
+A rosmsg paranncsal ellenőrízhetjük az üzenetünket:
 
-rosmsg show bme_ros_tutorials/Test
+`rosmsg show bme_ros_tutorials/Test`
 
+Készítsünk olyan C++ és Python publisher node-ot, ami ezt a saját üzenetünket küldi.
 
-Python node
+### C++ publisher:
 
-rqt
+Hozzunk létre egy `publisher_custom.cpp` fájlt az `src` mappában.
 
-mi van ha nincs sourceolva!
+A `publisher_custom.cpp` tartalma:
+```cpp
+#include "ros/ros.h"
+#include "bme_ros_tutorials/Test.h" // Our custom message type used in the node
 
+int main(int argc, char **argv)
+{
+	ros::init(argc, argv, "publisher_custom"); // Init the node with name "publisher_custom"
+	ros::NodeHandle nh;                        // NodeHandle will fully initialze the node
 
+	ros::Publisher pub = nh.advertise<bme_ros_tutorials::Test>("publisher_custom_topic", 10);
+	
+	ROS_INFO("Custom publisher C++ node has started and publishing data on publisher_custom_topic");
+	
+	ros::Rate loop_rate(5); // 5 Hz
+	
+	bme_ros_tutorials::Test test_message; // test_message is now our custom ROS Test type variable that is ready to be published
+	test_message.first_name = "David";    // Initializing first name string
+    test_message.last_name  = "Dudas";    // Initializing last name string
+    test_message.age        = 32;         // Initializing age
+    test_message.score      = 0;          // Initializing score that we'll increment later
+	
+    while (ros::ok()) // Run the node until Ctrl-C is pressed
+    {		
+		pub.publish(test_message); // Publishing data on topic "publisher_custom_topic"
+		test_message.score++;	
+		loop_rate.sleep();         // The loop runs at 5Hz
+	}
+}
+```
+
+### Python publihser:
+
+Hozzunk létre egy `publisher_custom.py` fájlt a `scripts` mappában.
+
+A `publisher_custom.py` tartalma:
+
+```python
+#!/usr/bin/env python
+
+import rospy
+from bme_ros_tutorials.msg import Test # Our custom message type used in the node
+
+rospy.init_node('publisher_custom')    # Init the node with name "publisher_custom"
+
+pub = rospy.Publisher('publisher_custom_topic', Test, queue_size=10)
+
+rospy.loginfo("Custom publisher Python node has started and publishing data on publisher_custom_topic")
+
+rate = rospy.Rate(5) # 5Hz
+
+testMessage = Test()
+testMessage.first_name = "David"
+testMessage.last_name  = "Dudas"
+testMessage.age        = 32
+testMessage.score      = 0
+
+while not rospy.is_shutdown(): # Run the node until Ctrl-C is pressed
+
+    pub.publish(testMessage)   # Publishing data on topic "publisher_custom_topic"
+    
+    testMessage.score += 1
+    
+    rate.sleep()               # The loop runs at 5Hz
+```
+
+Fordítsuk újra a catkin worksapce-t és indítsunk egy ROS mastert, a C++ vagy a python node-unkat és egy rqt-t:
+
+![alt text][image10]
+
+Nézzük meg az üzenetünket rqt-ban!
+
+![alt text][image11]
+
+Az üzenetünk értelmezésekor az rqt-t hibát mutat, mivel az üzenetünk nem része az alap ROS üzenetcsomagnak így az rqt nem tudja, hogyan értelmezze a tartalmát. Ezért az rqt indítása előtt be kell töltenünk a catkin workspace-ünk környezetét:
+
+![alt text][image12]
+
+És most így néz ki az üzenetünk rqt-ban:
+
+![alt text][image13]
 ___
 
 
 ## Turtlesim
 
-rosrun turtlesim turtlesim_node
+A Turtlesim a ROS legegyszerűbb beépített 2D-s szimulátora, ahol egy teknőst tudunk vezetni, bár elsőre nagyon különbözőnek tűnhet egy valódi mobil robothoz képest, de valójában rengeteg node használható közösen!
 
-rosrun turtlesim draw_square 
+![alt text][image14]
 
-rosrun turtlesim turtle_teleop_key
+Indítsunk egy ROS mastert és indítsuk el a turtlesim-et:  
+`rosrun turtlesim turtlesim_node`
 
+Nézzük meg milyen node-jai vannak a turtlesim csomagnak:
+```bash
+david@DavidsLenovoX1:~/bme_catkin_ws$ rosrun turtlesim 
+draw_square        mimic              turtlesim_node     turtle_teleop_key
+```
+
+Indítsuk el a `draw_square` node-ot:
+
+`rosrun turtlesim draw_square`  
+
+![alt text][image15]
+
+Állítsuk meg a négyzetek rajzolását Ctrl+c billentyűkombinációval.
+
+![alt text][image16]
+
+Nézzük meg milyen service-ek tartoznak a turtlesimhez:
+
+```bash
+david@DavidsLenovoX1:~/bme_catkin_ws$ rosnode info /turtlesim 
+--------------------------------------------------------------------------------
+Node [/turtlesim]
+Publications: 
+ * /rosout [rosgraph_msgs/Log]
+ * /turtle1/color_sensor [turtlesim/Color]
+ * /turtle1/pose [turtlesim/Pose]
+
+Subscriptions: 
+ * /turtle1/cmd_vel [unknown type]
+
+Services: 
+ * /clear
+ * /kill
+ * /reset
+ * /spawn
+ * /turtle1/set_pen
+ * /turtle1/teleport_absolute
+ * /turtle1/teleport_relative
+ * /turtlesim/get_loggers
+ * /turtlesim/set_logger_level
+
+
+contacting node http://172.26.152.188:38877/ ...
+Pid: 1794
+Connections:
+ * topic: /rosout
+    * to: /rosout
+    * direction: outbound (47251 - 172.26.152.188:34456) [17]
+    * transport: TCPROS
+
+
+```
+
+További részleteket így deríthetünk ki a `clear` service-ről:
+```bash
+david@DavidsLenovoX1:~/bme_catkin_ws$ rosservice info /clear 
+Node: /turtlesim
+URI: rosrpc://172.26.152.188:47251
+Type: std_srvs/Empty
+Args:
+```
+
+Tisztítsuk is le a vásznat a `clear` servise segítségével:  
+`rosservice call /clear`
+
+Indítsuk el a keyboard teleop node-ot a Turtlesim-hez:  
+`rosrun turtlesim turtle_teleop_key`
+
+A nyilakkal irányíthatjuk a teknőst. Mivel a teknős egy idő után összefirkálja a vásznat bármikor letakaríthatjuk a vásznat az előző clear service-szel. Vizsgájuk most meg a `set_pen` service-t is!
+
+```bash
+david@DavidsLenovoX1:~/bme_catkin_ws$ rosservice info /turtle1/set_pen 
+Node: /turtlesim
+URI: rosrpc://172.26.152.188:47251
+Type: turtlesim/SetPen
+Args: r g b width off
+```
+
+A következő paranccsal pirosra állíthatjuk a tollat:  
+`rosservice call /turtle1/set_pen 255 0 0 3 0`
+
+Az utolsó paramétert pedig ha 1-re állítjuk kikapcsolhatjuk a tollat:  
+`rosservice call /turtle1/set_pen 255 0 0 3 1`
+
+Vizsgáljuk meg milyen ROS topicok érhetők el. Csak a ROS master, a Turtlesim és a keyboard teleop node-ok fussanak!
+
+```bash
+david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic list
+/rosout
+/rosout_agg
+/turtle1/cmd_vel
+/turtle1/color_sensor
+/turtle1/pose
+```
+
+Indítsunk a keyboard teleop mellé egy rqt-t is!
 
 
 ### Twist üzenetek
