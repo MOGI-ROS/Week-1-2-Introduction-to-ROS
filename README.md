@@ -46,16 +46,12 @@ h2 {color:DeepSkyBlue;}
 
  - **A tárgy teljesítése: csoportos házifaladat!**
 
-***
-
-## Mi is az a ROS?
+# Mi is az a ROS?
 A ROS = Robot Operating System, de valójában ez nem egy operációs rendszer, hanem egy olyan middleware, melyet a robotikában széles körben alkalmaznak. Nyíltforráskódú és könyvtárai segítségével lehetővé teszi a robot alkalmazások gyors fejlesztését. Sok előre beépített funkciót tartalmaz, amiket meg fogunk ismerni a félév során, páldául kamerák és más szenzorok kezelése, térképezés és útvonaltervezés, telemanipuláció, stb. Fejlesztését 2007-ben kezdte a Stanford egyetem, 2008-ban csatlakozott a fejlesztéshez a Willow Garage és 2013 óta az OSRF gondozásában, ami 2017-ben Open Robotics-ra változtatta a nevét. 2018 óta a Microsoft és az Amazon részt vesz a ROS fejlesztésében.
 
 Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és mostmár telepíthető Windows-ra is, továbbra is a Linux operációs rendszer a legelterjedtebb, ezt fogjuk használni mi is a WSL (Windows Subsystem Linux) segítségével. Bár egyre több programnyelv támogatott a C++ és Python programozási nyelvek a legelterjedtebbek ROS esetén, mi is ezeket fogjuk használni. A ROS-hoz készített alkalmazásokat/komponenseket node-oknak nevezzük, melyek közötti kommunikációt a ROS valósítja meg, mivel a kommunikáció TCP/IP alapú könnyen fejleszthetünk több, hálózatba kötött számítógépen elosztott alkalmazásokat. A robotot vezérlő ROS alkalmazás tehát sok, egymással kommunikáló node-ból épül fel. 
 
-***
-
-## Milyen szoftvereket fogunk használni?
+# Milyen szoftvereket fogunk használni?
 
 <details>
 <summary>Visual Studio Code</summary>
@@ -221,7 +217,7 @@ A VcXsrv konfigja:
 ![alt text][image4]  
 ![alt text][image5]  
 
-Ahhoz, hogy a WSL-ben futó Linux tudjon csatlakozni az X szerverhez, adjuk hozzá a következő pár sort a ~/.bashrc fájlhoz. A .bashrc megnyitása nano szövegszerkesztővel:  
+Ahhoz, hogy a WSL-ben futó Linux tudjon csatlakozni az X szerverhez, adjuk hozzá a következő pár sort a `~/.bashrc` fájlhoz a WLS-ben futó Linuxon. A `.bashrc` megnyitása nano szövegszerkesztővel:  
 `cd ~`  
 `nano .bashrc`  
 
@@ -234,9 +230,9 @@ export LIBGL_ALWAYS_SOFTWARE=1
 </details>
 
 <details>
-<summary>Terminator</summary>
+<summary>Terminator / Widows Terminal</summary>
 
-A Terminator egy nagyon hasznos Linuxos terminál, ezt javaslom a tárgy hazsnálata során, mert rengeteg parancssorral fogunk dolgozni.
+A Terminator egy nagyon hasznos Linuxos terminál, ezt javaslom a tárgy használata során, mert rengeteg parancssorral fogunk dolgozni.
 
 ![alt text][image2]
 
@@ -254,6 +250,9 @@ Parancssor bezárása:
 Terminator (és az összes parancssor) bezárása:  
   `Ctrl+Shift+q`  
 
+Windows 10 WSL2 használata esetén használhatjátok a [Windows Terminal](https://aka.ms/terminal)-t vagy a [Windows Terminal Preview](https://aka.ms/terminal-preview)-t is, ezeket is [jól be lehet állítani](https://docs.microsoft.com/en-us/windows/terminal/panes)!
+
+
 </details>
 
 <details>
@@ -266,41 +265,64 @@ http://wiki.ros.org/melodic/Installation
 Ubuntu 18.04 esetén ROS Melodic  
 Ubuntu 20.04 esetén ROS Noetic  
 
+Telepítés során a full desktop csomagot ajánlott telepíteni, ebben a legtöbb dolog benne van, amit használni fogunk.  
+`sudo apt install ros-melodic-desktop-full`
+
 A ROS Melodic 2023-ig, a Noetic 2025-ig támogatott.  
+
+A ROS telepítése után minden terminálban be kell tölteni a környezetet, ha használni akarjuk a  
+`source /opt/ros/melodic/setup.bash`  
+segítségével. Ha csak egy ROS disztribúciót használunk a gépen, akkor érdemes ezt betenni a `./basrc` fájlba, akkor nem kell többet kézzel betölteni a ROS alap környezetét.
   
   - ### Catkin workspace parancsok
 
-Hozzunk létre egy catkin workspace-t:  
+A catkin workspace fordítása:  
+`catkin_make`  
 
+Új csomag lérehozása a catkin workspace-ben:  
+`catkin_create_pkg PACKAGE DEPENDENCY1 DEPENDENCY2 ...`  
+
+Hozzunk létre egy catkin workspace-t, ehhez a catkin_make-et fogjuk használni:  
 `cd ~`  
 `mkdir -p catkin_ws/src`  
 `cd catkin_ws`  
 `catkin_make`  
 
-
-`catkin_make`  
-`catkin_create_pkg PACKAGE DEPENDENCY1 DEPENDENCY2 ...`  
+A catkin workspace környezetet minden terminálban be kell tölteni, ha használni akarjuk a  
+`source ~/catkin_ws/devel/setup.bash`  
+segítségével. Ha csak egy catkin workspace-t használunk, akkor érdemes ezt is betenni a `./basrc` fájlba, akkor nem kell többet kézzel betölteni a catkin workspace környezetét.
 
   - ### ROS parancsok
 
+ROS master indítása:  
 `roscore`  
-`roscd PACKAGE`    
+ROS package mappájába navigálás:  
+`roscd PACKAGE`  
+ROS package egy adott node-jának futtatása:  
 `rosrun PACKAGE NODE`  
+ROS package launchfile-jának indítása:  
 `roslaunch PACKAGE LAUNCHFILE`  
+Aktuálisan futó ROS node-ok listája:  
 `rosnode list`  
+Adott (épp futó) ROS node-ról több infó:  
 `rosnode info /NODE`  
+ROS topicok listája:  
 `rostopic list`  
+Egy adott ROS topicról több infó:  
 `rostopic info /TOPIC`  
+Egy adott ROS topicra való feliratkozás parancssorból:  
 `rostopic echo /TOPIC`  
+Egy adott ROS topicra való üzenetküldés parancssorból:  
 `rostopic pub /TOPIC MSG "DATA"`  
 
 </details>
+</br>
 
 
-***
-## ROS alapok
 
-- ## ROS Master
+# ROS alapok
+
+## ROS Master
 
 A ROS Master felel az egyes node-ok regisztrációjáért, összeköti a publishereket és a subscriberek, ez írja le a teljes rendszerünk gráfját. Emellett ez tárolja a paramétereket is. Miután a ROS Master összekötötte az egyes node-okat, a node-ok peer-to-peer kommunikálnak, nem a ROS Masteren keresztül. További részletek a [wikin](http://wiki.ros.org/Master).  
 A ROS Mastert a `roscore` paranccsal indítjuk el.
@@ -348,6 +370,7 @@ started core service [/rosout]
 ```
 
 ___
+
 
 ## ROS Node
 
@@ -771,7 +794,7 @@ Nézzük meg a node és topic részleteit a C++ nodehoz hasonlóan!
 
 ___
 
-- ## Subscriber
+## Subscriber
 
 A ROS subsciber adatokat fogad egy vagy több publishertől. Hozzuk létre az első subscriber-ünket C++-ban:
 
@@ -954,7 +977,7 @@ Ahogy ebben a példában láttuk a ROS segítségével könnyen megoldható, hog
 
 ___
 
-- ## rqt
+## rqt
 
 Az rqt egy grafikus tool, ami nagyon hasznos a ROS üzeneteinek megjelenítésére akár táblázatos, akár grafikus formában. Az rqt Python vagy C++ pluginekkel tetszőlegesen kiegészíthető.  
 
@@ -971,7 +994,7 @@ Egy másik hasznos alap plugin a `Plot`.
 Ezzel grafikusan tudjuk ábrázolni azokat az adatainkat, amik számformátumúak.  
 ![alt text][image9]  
 
-- ## Launchfile  
+## Launchfile  
 
 ROS node-okat nem csak a `rosrun` paranccsal tudunk indítani. Készíthetünk úgynevezett launchfile-okat. Ezek speciális XML fájlok, ahol egy launchfile-ban tetszőleges számú node-ot indíthatunk, vagy akár más launchfile-okat is elindíthatunk. Ezeket tipikusan egy node launch mappájában tartjuk, de bárhonnan indíthatók a `roslaunch` paranccsal. Arra érdemes figyelni, ha olyan launchfile-t akarunk indítani, ami nem egy node része, akkor a fájl mappájából kell indítani a `roslaunch` parancsot.
 
@@ -1019,7 +1042,7 @@ xterm  -e  " roslaunch bme_ros_tutorials example3.launch"
 ```
 ___
 
-- ## Services
+## Services
 
 A hagyományos publisher/subscriber kommunikáció a legtöbb esetben jó megoldás a node-jaink közötti kommunikációra, viszont ezek egyirányú több node-tól több node-hoz menő adatátvitelre alkalmasak. Elosztott robotikai rendszerekben előfordul, hogy RPC-re (Remote Procedure Call) van szükségünk, ahol egy klienstől érkező kérésre (request) a vágrehajtó szerver választ (reply) is ad. A ROS service-ekről részletesen olvashattok a [ROS wiki](http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28c%2B%2B%29)-n, az ott található tutorialokon fogunk végigmenni közösen.
 
@@ -1244,7 +1267,7 @@ Indítsunk egy ROS mastert, majd a service szerverünket:
 A ROS service-eket RPC-re találták ki, ahol a request-re a reply azonnal (kis számítás után) megérkezik. Olyan esetekben, ha a requestet egy hosszú várakozás követi, például a robotunk A-ból B-be mozog, akkor ROS action-öket érdemes használni. A ROS actionökre nem térünk most ki részletesen, ezeket elég ritkán használjuk, és a ROS wiki segít, ha ilyet szeretnénk csinálni.
 ___
 
-- ## Messages
+## Messages
 
 A ROS számos üzenettípust támogat alapból, számok, stringek, tömbök egyszerűen küldhetők, sőt rengeteg speciális üzenettípus van a különböző szenzorok kezeléséhez is, pl. IMU, Lidar, kamera. Bizonyos esetben előfordulhat, hogy saját egyedi üzeneteket szeretnénk használni, ilyenkor létrehozhatjuk a saját üzenetformátumunkat. Erről további részleteket találhattok a [ROS wiki](http://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv)-n.
 
@@ -1405,11 +1428,11 @@ Az üzenetünk értelmezésekor az rqt-t hibát mutat, mivel az üzenetünk nem 
 
 És most így néz ki az üzenetünk rqt-ban:
 
-![alt text][image13]
-___
+![alt text][image13]  
 
 
-## Turtlesim
+
+# Turtlesim
 
 A Turtlesim a ROS legegyszerűbb beépített 2D-s szimulátora, ahol egy teknőst tudunk vezetni, bár elsőre nagyon különbözőnek tűnhet egy valódi mobil robothoz képest, de valójában rengeteg node használható közösen!
 
@@ -1557,5 +1580,11 @@ Ha ezek után sincs a listában, akkor ezzel tudjuk kényszeríteni az rqt-t, ho
 
 Utána már a listában kell lennie!
 
-A következő alkalommal készítünk egy saját node-ot a Turtlesim irányítására!
+# Saját Turtlesim node - ToDo
+
+- Teknős mozgatása
+
+- Ceruza felemelése és lerakása / színválasztás
+
+
 
