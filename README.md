@@ -587,10 +587,10 @@ Indítsuk el a node-ot a `rosrun bme_ros_tutorials basic_node.py` paranccsal:
 
 ```console
 david@DavidsLenovoX1:~/catkin_ws/src/bme_ros_tutorials$ rosrun bme_ros_tutorials basic_node.py
-[rosrun] Couldn't find executable named basic_node.py below /home/david/bme_catkin_ws/src/bme_ros_tutorials
+[rosrun] Couldn't find executable named basic_node.py below /home/david/catkin_ws/src/bme_ros_tutorials
 [rosrun] Found the following, but they're either not files,
 [rosrun] or not executable:
-[rosrun]   /home/david/bme_catkin_ws/src/bme_ros_tutorials/scripts/basic_node.py
+[rosrun]   /home/david/catkin_ws/src/bme_ros_tutorials/scripts/basic_node.py
 ```
 
 A létrehozott fájl nem futtatható, ezért először be kell állítsuk a fájl futtathatóságát:  
@@ -1107,6 +1107,14 @@ Ezután a rossrv parancs segítségével megbizonyosodhatunk róla, hogy létezi
 
 A válasz a service fáljunk tartalma lesz.
 
+```console
+david@DavidsLenovoX1:~/catkin_ws/src$ rossrv show bme_ros_tutorials/AddTwoInts
+int64 a
+int64 b
+---
+int64 sum
+```
+
 ### C++ példa
 
 Hozzunk létre egy `service_server.cpp` és egy `service_client.cpp` fájlt.  
@@ -1443,7 +1451,7 @@ Indítsunk egy ROS mastert és indítsuk el a turtlesim-et:
 
 Nézzük meg milyen node-jai vannak a turtlesim csomagnak:
 ```console
-david@DavidsLenovoX1:~/bme_catkin_ws$ rosrun turtlesim 
+david@DavidsLenovoX1:~/catkin_ws$ rosrun turtlesim 
 draw_square        mimic              turtlesim_node     turtle_teleop_key
 ```
 
@@ -1460,7 +1468,7 @@ Indítsuk el a `draw_square` node-ot:
 Nézzük meg milyen service-ek tartoznak a turtlesimhez:
 
 ```console
-david@DavidsLenovoX1:~/bme_catkin_ws$ rosnode info /turtlesim 
+david@DavidsLenovoX1:~/catkin_ws$ rosnode info /turtlesim 
 --------------------------------------------------------------------------------
 Node [/turtlesim]
 Publications: 
@@ -1496,7 +1504,7 @@ Connections:
 
 További részleteket így deríthetünk ki a `clear` service-ről:
 ```console
-david@DavidsLenovoX1:~/bme_catkin_ws$ rosservice info /clear 
+david@DavidsLenovoX1:~/catkin_ws$ rosservice info /clear 
 Node: /turtlesim
 URI: rosrpc://172.26.152.188:47251
 Type: std_srvs/Empty
@@ -1512,7 +1520,7 @@ Indítsuk el a keyboard teleop node-ot a Turtlesim-hez:
 A nyilakkal irányíthatjuk a teknőst. Mivel a teknős egy idő után összefirkálja a vásznat bármikor letakaríthatjuk a vásznat az előző clear service-szel. Vizsgájuk most meg a `set_pen` service-t is!
 
 ```console
-david@DavidsLenovoX1:~/bme_catkin_ws$ rosservice info /turtle1/set_pen 
+david@DavidsLenovoX1:~/catkin_ws$ rosservice info /turtle1/set_pen 
 Node: /turtlesim
 URI: rosrpc://172.26.152.188:47251
 Type: turtlesim/SetPen
@@ -1528,7 +1536,7 @@ Az utolsó paramétert pedig ha 1-re állítjuk kikapcsolhatjuk a tollat:
 Vizsgáljuk meg milyen ROS topicok érhetők el. Csak a ROS master, a Turtlesim és a keyboard teleop node-ok fussanak!
 
 ```console
-david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic list
+david@DavidsLenovoX1:~/catkin_ws$ rostopic list
 /rosout
 /rosout_agg
 /turtle1/cmd_vel
@@ -1539,7 +1547,7 @@ david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic list
 Vizsgáljunk meg a `/turtle1/cmd_vel` és a `/turtle1/pose` topic-ot alaposabban!
 
 ```console
-david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic info /turtle1/cmd_vel 
+david@DavidsLenovoX1:~/catkin_ws$ rostopic info /turtle1/cmd_vel 
 Type: geometry_msgs/Twist
 
 Publishers: 
@@ -1550,7 +1558,7 @@ Subscribers:
 ```
 
 ```console
-david@DavidsLenovoX1:~/bme_catkin_ws$ rostopic info /turtle1/pose
+david@DavidsLenovoX1:~/catkin_ws$ rostopic info /turtle1/pose
 Type: turtlesim/Pose
 
 Publishers: 
@@ -1580,11 +1588,133 @@ Ha ezek után sincs a listában, akkor ezzel tudjuk kényszeríteni az rqt-t, ho
 
 Utána már a listában kell lennie!
 
-# Saját Turtlesim node - ToDo
+# Saját Turtlesim node
 
-- Teknős mozgatása
+Láttuk tehát, hogy a megfelelő topicba (`/turtle1/cmd_vel`) küldött twist üzenettel tudjuk irányítani a teknőst. Láttuk azt is, hogy egy twist üzenet 2 darab 3 elemű vektorből áll, a mozgást 3 dimenzióban a `linear` a forgást, szintén 3 dimenzióban pedig az `angular` vektor írja le.
 
-- Ceruza felemelése és lerakása / színválasztás
+A vektorok tengelyeit a ROS kovenciója szerint úgy használjuk, hogy a robot (vagy a teknős) a `linear x` tengely mentén mozog előre és az `angular z` tengely menti forgás a robot függőleges tengely körüli forgása. A `linear x` és `angular z` kombinációja segítségével pedig tetszőleges köríven tudunk mozogni.
+
+Írjunk tehát egy saját node-ot `draw_circle.py` néven, ami a teknőst körpályán mozgatja!  
+`roscd bme_ros_tutorials`  
+`cd scripts`  
+`touch draw_circle.py`
+
+```python
+#!/usr/bin/env python
+
+import rospy
+from geometry_msgs.msg import Twist      # We'll use Twist message in the node
+
+rospy.init_node('turtlesim_draw_circle') # Init the node with name "turtlesim_draw_circle"
+
+pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=1)
+
+rospy.loginfo("Turtlesim draw circle node has started!")
+
+rate = rospy.Rate(20) # 20Hz
+
+msg = Twist()
+msg.linear.x  = 1
+msg.angular.z = 1
+
+while not rospy.is_shutdown(): # Run the node until Ctrl-C is pressed
+
+    pub.publish(msg)           # Publishing twist message on topic "/turtle1/cmd_vel"
+    rate.sleep()               # The loop runs at 20Hz
+```
+
+Ennél egy picit bonyolultabb, ha a node-dal fel is iratkoztok a `/turtle1/pose` topicra, és az alapján változtattok a rajzoláson, erre egy jó példa a turtlesim `draw_square` node-ja, aminek a forrása természetesen elérhető itt:  
+https://github.com/ros/ros_tutorials/blob/noetic-devel/turtlesim/tutorials/draw_square.cpp
 
 
+## ROS service hívás - ceruza felemelése és lerakása  
 
+Kézzel meghívtunk az előbb pár turtlesim service-t, most tegyük ezt meg kódból!
+Írjunk egy újabb saját node-ot `draw_circle_service_calls.py` néven, ami időnként felemeli majd újra lerakja a ceruzát, miközben a teknős körbe-körbe megy!  
+`roscd bme_ros_tutorials`  
+`cd scripts`  
+`touch draw_circle_service_calls.py`
+
+```python
+#!/usr/bin/env python
+
+import rospy
+from geometry_msgs.msg import Twist # We'll use Twist message in the node
+import turtlesim.srv                # This contains the service for changing the pen
+import std_srvs.srv                 # Clear service is a standard ROS service
+import random
+
+# This service call can clear the canvas
+def clear():
+    rospy.wait_for_service('clear')
+    try:
+        clear_s = rospy.ServiceProxy('clear', std_srvs.srv.Empty)
+        clear_s()
+        return
+    except rospy.ServiceException as e:
+        print("Service call failed: %s"%e)
+
+# This service call can turn on or off the pen and change its color to a random one
+def set_pen(off):
+    rospy.wait_for_service('turtle1/set_pen')
+    try:
+        set_pen_s = rospy.ServiceProxy('turtle1/set_pen', turtlesim.srv.SetPen)
+        set_pen_s(random.randint(0,255),random.randint(0,255),random.randint(0,255),3,off)
+        return
+    except rospy.ServiceException as e:
+        print("Service call failed: %s"%e)
+
+rospy.init_node('turtlesim_draw_circle_services') # Init the node with name "turtlesim_draw_circle_services"
+
+pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=1)
+
+rospy.loginfo("Turtlesim draw circle - with service calls - node has started!")
+
+rate = rospy.Rate(20) # 20Hz
+
+msg = Twist()
+msg.linear.x = 1
+msg.angular.z = 1
+
+counter = 0
+pen_off = False
+set_pen(pen_off)               # Initialize pen
+
+while not rospy.is_shutdown(): # Run the node until Ctrl-C is pressed
+
+    pub.publish(msg)           # Publishing twist message on topic "/turtle1/cmd_vel"
+
+    counter+=1                 # Change pen state in every 0.5s
+    if counter%10 == 0:
+        pen_off = not pen_off
+        set_pen(pen_off)
+
+    rate.sleep()               # The loop runs at 20Hz
+```
+
+A service hívások esetén ezúttal nem várok response-t, mint a korábbi példák során, ennek oka, hogy ezek a service-ek, nem adnak vissza semmilyen étéket. Ezeket könnyen ellenőrízhetjük a `rossrv show` paranccsal!  
+
+```console
+david@DavidsLenovoX1:~$ rossrv show std_srvs/Empty
+---
+
+```
+
+```console
+david@DavidsLenovoX1:~$ rossrv show turtlesim/SetPen
+uint8 r
+uint8 g
+uint8 b
+uint8 width
+uint8 off
+---
+
+```
+
+
+# Szorgalmi feladat
+
+Bármilyen saját node készítése a turtlesim mozgatásához. Ötletek:  
+
+- MOGI vagy bármilyen szöveg leírása
+- Feliratkozás a turtlesim pose üzenetére, és ez alapján valamilyen alakzat rajzolása
