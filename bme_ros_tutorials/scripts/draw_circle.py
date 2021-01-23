@@ -9,7 +9,7 @@ pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=1)
 
 rospy.loginfo("Turtlesim draw circle node has started!")
 
-rate = rospy.Rate(5) # 5Hz
+rate = rospy.Rate(20) # 20Hz
 
 msg = Twist()
 msg.linear.x  = 1
@@ -19,4 +19,4 @@ while not rospy.is_shutdown(): # Run the node until Ctrl-C is pressed
 
     pub.publish(msg)           # Publishing twist message on topic "/turtle1/cmd_vel"
     #msg.linear.x += 0.005     # Uncomment this line to draw a spiral instead of circle
-    rate.sleep()               # The loop runs at 5Hz
+    rate.sleep()               # The loop runs at 20Hz
