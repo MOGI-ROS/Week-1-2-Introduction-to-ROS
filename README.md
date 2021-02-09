@@ -47,9 +47,9 @@ h2 {color:DeepSkyBlue;}
  - **A tárgy teljesítése: csoportos házifaladat!**
 
 # Mi is az a ROS?
-A ROS = Robot Operating System, de valójában ez nem egy operációs rendszer, hanem egy olyan middleware, melyet a robotikában széles körben alkalmaznak. Nyíltforráskódú és könyvtárai segítségével lehetővé teszi a robot alkalmazások gyors fejlesztését. Sok előre beépített funkciót tartalmaz, amiket meg fogunk ismerni a félév során, páldául kamerák és más szenzorok kezelése, térképezés és útvonaltervezés, telemanipuláció, stb. Fejlesztését 2007-ben kezdte a Stanford egyetem, 2008-ban csatlakozott a fejlesztéshez a Willow Garage és 2013 óta az OSRF gondozásában, ami 2017-ben Open Robotics-ra változtatta a nevét. 2018 óta a Microsoft és az Amazon részt vesz a ROS fejlesztésében.
+A ROS = Robot Operating System, de valójában ez nem egy operációs rendszer, hanem egy olyan middleware, melyet a robotikában széles körben alkalmaznak. Nyíltforráskódú és könyvtárai segítségével lehetővé teszi a robot alkalmazások gyors fejlesztését. Sok előre beépített funkciót tartalmaz, amiket meg fogunk ismerni a félév során, például kamerák és más szenzorok kezelése, térképezés és útvonaltervezés, telemanipuláció, stb. Fejlesztését 2007-ben kezdte a Stanford egyetem, 2008-ban csatlakozott a fejlesztéshez a Willow Garage és 2013 óta az OSRF gondozásában, ami 2017-ben Open Robotics-ra változtatta a nevét. 2018 óta a Microsoft és az Amazon részt vesz a ROS fejlesztésében.
 
-Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és mostmár telepíthető Windows-ra is, továbbra is a Linux operációs rendszer a legelterjedtebb, ezt fogjuk használni mi is a WSL (Windows Subsystem Linux) segítségével. Bár egyre több programnyelv támogatott a C++ és Python programozási nyelvek a legelterjedtebbek ROS esetén, mi is ezeket fogjuk használni. A ROS-hoz készített alkalmazásokat/komponenseket node-oknak nevezzük, melyek közötti kommunikációt a ROS valósítja meg, mivel a kommunikáció TCP/IP alapú könnyen fejleszthetünk több, hálózatba kötött számítógépen elosztott alkalmazásokat. A robotot vezérlő ROS alkalmazás tehát sok, egymással kommunikáló node-ból épül fel. 
+Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és most már telepíthető Windows-ra is, továbbra is a Linux operációs rendszer a legelterjedtebb, ezt fogjuk használni mi is a WSL (Windows Subsystem Linux) segítségével. Bár egyre több programnyelv támogatott a C++ és Python programozási nyelvek a legelterjedtebbek ROS esetén, mi is ezeket fogjuk használni. A ROS-hoz készített alkalmazásokat/komponenseket node-oknak nevezzük, melyek közötti kommunikációt a ROS valósítja meg, mivel a kommunikáció TCP/IP alapú könnyen fejleszthetünk több, hálózatba kötött számítógépen elosztott alkalmazásokat. A robotot vezérlő ROS alkalmazás tehát sok, egymással kommunikáló node-ból épül fel. 
 
 # Milyen szoftvereket fogunk használni?
 
@@ -113,7 +113,7 @@ Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és mostmár telepíthet�
     * item
     + item
     ```
-  * Vizszintes vonal:
+  * Vízszintes vonal:
     ```markdown
     három vagy több
     ___
@@ -158,7 +158,7 @@ Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és mostmár telepíthet�
 <summary>GIT</summary>
 
   - ### GIT parancssorból  
-    A tárgy során GIT verziókevtő rendszert fogunk használni, és a házifeladatot is ebben kell megcsinálni. Regisztráció a [GitHub](https://www.github.com)-on a privát email címetekkel.  
+    A tárgy során GIT verziókezelő rendszert fogunk használni, és a házifeladatot is ebben kell megcsinálni. Regisztráció a [GitHub](https://www.github.com)-on a privát email címetekkel.  
     A legfontosabb GIT parancsok:  
 
     GIT repo letöltése a default branch-csel:  
@@ -210,7 +210,7 @@ Az Ubuntu 18.04 és a 20.04 is elérhető a Microsoft Store-ból. A tárgy sorá
 <details>
 <summary>XServer (VcXsrv)</summary>
 
-Ahhoz, hogy grafikus Linux alkalmazásokat futassunk szükségünk van egy X szerverre Windowson. Ilyen a [VcXsrv](https://sourceforge.net/projects/vcxsrv/).  
+Ahhoz, hogy grafikus Linux alkalmazásokat futtassunk szükségünk van egy X szerverre Windowson. Ilyen a [VcXsrv](https://sourceforge.net/projects/vcxsrv/).  
 
 A VcXsrv konfigja:  
 ![alt text][image3]  
@@ -279,7 +279,7 @@ segítségével. Ha csak egy ROS disztribúciót használunk a gépen, akkor ér
 A catkin workspace fordítása:  
 `catkin_make`  
 
-Új csomag lérehozása a catkin workspace-ben:  
+Új csomag létrehozása a catkin workspace-ben:  
 `catkin_create_pkg PACKAGE DEPENDENCY1 DEPENDENCY2 ...`  
 
 Hozzunk létre egy catkin workspace-t, ehhez a catkin_make-et fogjuk használni:  
@@ -381,7 +381,7 @@ Lépjünk be a már létrehozott catkin workspace-ünkbe:
 Új node-ot a `catkin_create_pkg` paranccsal tudunk létrehozni. Megadhatjuk a node-unk függőségeit a létrehozáskor:  
 `catkin_create_pkg bme_ros_tutorials roscpp rospy std_msgs actionlib actionlib_msgs`  
 
-Miután létrehoztuk a node-ot, egy üres `src` és `inc` mappa, illetve egy `CMakeList.txt` és egy `package.xml` fájl jn létre.
+Miután létrehoztuk a node-ot, egy üres `src` és `inc` mappa, illetve egy `CMakeList.txt` és egy `package.xml` fájl jön létre.
 
 Ezek a függőségek automatikusan bekerülnek a `CMakeList.txt` és `package.xml` fájlokba, de ezeket később is felvehetjük kézzel.
 
@@ -597,7 +597,7 @@ A létrehozott fájl nem futtatható, ezért először be kell állítsuk a fáj
 `chmod +x basic_node.py`
 
 Ezután próbáljuk meg újra elindítani.  
-Ha a következő hibát látjátok az azért van, mert a fájl a Windowsnak megfelelő sorfvégződéssel lett létrehozva (CRLF), ezt le kell cseréljük Unix típusú sorvégekre (LF). Ez a Visual Studio Code-ban egyszerűen megtehető a jobb alsó sarokban.
+Ha a következő hibát látjátok az azért van, mert a fájl a Windowsnak megfelelő sorvégződéssel lett létrehozva (CRLF), ezt le kell cseréljük Unix típusú sorvégekre (LF). Ez a Visual Studio Code-ban egyszerűen megtehető a jobb alsó sarokban.
 
 ```console
 david@DavidsLenovoX1:~/catkin_ws/src/bme_ros_tutorials/scripts$ rosrun bme_ros_tutorials basic_node.py
@@ -1044,7 +1044,7 @@ ___
 
 ## Services
 
-A hagyományos publisher/subscriber kommunikáció a legtöbb esetben jó megoldás a node-jaink közötti kommunikációra, viszont ezek egyirányú több node-tól több node-hoz menő adatátvitelre alkalmasak. Elosztott robotikai rendszerekben előfordul, hogy RPC-re (Remote Procedure Call) van szükségünk, ahol egy klienstől érkező kérésre (request) a vágrehajtó szerver választ (reply) is ad. A ROS service-ekről részletesen olvashattok a [ROS wiki](http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28c%2B%2B%29)-n, az ott található tutorialokon fogunk végigmenni közösen.
+A hagyományos publisher/subscriber kommunikáció a legtöbb esetben jó megoldás a node-jaink közötti kommunikációra, viszont ezek egyirányú több node-tól több node-hoz menő adatátvitelre alkalmasak. Elosztott robotikai rendszerekben előfordul, hogy RPC-re (Remote Procedure Call) van szükségünk, ahol egy klienstől érkező kérésre (request) a végrehajtó szerver választ (reply) is ad. A ROS service-ekről részletesen olvashattok a [ROS wiki](http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28c%2B%2B%29)-n, az ott található tutorialokon fogunk végigmenni közösen.
 
 A service-ek request/reply üzenetpárosa a ROS-ban service (`.srv`) fájlokban van leírva, általában egy node `srv` mappájban. Ebben a fejezetben csináljunk egy olyan service-t, ami 2 egész számot vár request-ként, és a két szám összege a reply.
 
@@ -1102,10 +1102,10 @@ Ezek után fordítsuk újra a catkin workspace-ünket és adjuk hozzá a környe
 `catkin_make`  
 `source devel/setup.bash`  
 
-Ezután a rossrv parancs segítségével megbizonyosodhatunk róla, hogy létezik a servce-ünk:  
+Ezután a rossrv parancs segítségével megbizonyosodhatunk róla, hogy létezik a service-ünk:  
 `rossrv show bme_ros_tutorials/AddTwoInts`
 
-A válasz a service fáljunk tartalma lesz.
+A válasz a service fájlunk tartalma lesz.
 
 ```console
 david@DavidsLenovoX1:~/catkin_ws/src$ rossrv show bme_ros_tutorials/AddTwoInts
@@ -1272,7 +1272,7 @@ Indítsunk egy ROS mastert, majd a service szerverünket:
 És végül indítsuk el a service klienst 2 parancssori paraméterrel:  
 `rosrun bme_ros_tutorials service_client.py 3 4`
 
-A ROS service-eket RPC-re találták ki, ahol a request-re a reply azonnal (kis számítás után) megérkezik. Olyan esetekben, ha a requestet egy hosszú várakozás követi, például a robotunk A-ból B-be mozog, akkor ROS action-öket érdemes használni. A ROS actionökre nem térünk most ki részletesen, ezeket elég ritkán használjuk, és a ROS wiki segít, ha ilyet szeretnénk csinálni.
+A ROS service-eket RPC-re találták ki, ahol a request-re a reply azonnal (kis számítás után) megérkezik. Olyan esetekben, ha a requestet egy hosszú várakozás követi, például a robotunk A-ból B-be mozog, akkor ROS action-öket érdemes használni. A ROS action-ökre nem térünk most ki részletesen, ezeket elég ritkán használjuk, és a ROS wiki segít, ha ilyet szeretnénk csinálni.
 ___
 
 ## Messages
@@ -1590,9 +1590,9 @@ Utána már a listában kell lennie!
 
 # Saját Turtlesim node
 
-Láttuk tehát, hogy a megfelelő topicba (`/turtle1/cmd_vel`) küldött twist üzenettel tudjuk irányítani a teknőst. Láttuk azt is, hogy egy twist üzenet 2 darab 3 elemű vektorből áll, a mozgást 3 dimenzióban a `linear` a forgást, szintén 3 dimenzióban pedig az `angular` vektor írja le.
+Láttuk tehát, hogy a megfelelő topicba (`/turtle1/cmd_vel`) küldött twist üzenettel tudjuk irányítani a teknőst. Láttuk azt is, hogy egy twist üzenet 2 darab 3 elemű vektorból áll, a mozgást 3 dimenzióban a `linear` a forgást, szintén 3 dimenzióban pedig az `angular` vektor írja le.
 
-A vektorok tengelyeit a ROS kovenciója szerint úgy használjuk, hogy a robot (vagy a teknős) a `linear x` tengely mentén mozog előre és az `angular z` tengely menti forgás a robot függőleges tengely körüli forgása. A `linear x` és `angular z` kombinációja segítségével pedig tetszőleges köríven tudunk mozogni.
+A vektorok tengelyeit a ROS konvenciója szerint úgy használjuk, hogy a robot (vagy a teknős) a `linear x` tengely mentén mozog előre és az `angular z` tengely menti forgás a robot függőleges tengely körüli forgása. A `linear x` és `angular z` kombinációja segítségével pedig tetszőleges köríven tudunk mozogni.
 
 Írjunk tehát egy saját node-ot `draw_circle.py` néven, ami a teknőst körpályán mozgatja!  
 `roscd bme_ros_tutorials`  
