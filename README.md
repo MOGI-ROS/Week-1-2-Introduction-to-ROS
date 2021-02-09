@@ -44,7 +44,23 @@ h2 {color:DeepSkyBlue;}
 - A második fele: robotkarok szimulációja és mozgatása, direkt és inverz kinematika:  
   <a href="https://www.youtube.com/watch?v=mm2vKYH-Jy8"><img height="400" src="./assets/youtube-openmanipulator.png"></a>
 
- - **A tárgy teljesítése: csoportos házifaladat!**
+- **A tárgy teljesítése: csoportos vagy egyéni házifaladat!**
+
+# Tartalomjegyzék
+1. [Mi is az a ROS?](#Mi-is-az-a-ROS?)
+2. [Milyen szoftvereket fogunk használni?](#Milyen-szoftvereket-fogunk-használni?)
+3. [ROS alapok](#ROS-alapok)  
+3.1. [ROS Master](#ROS-Master)  
+3.2. [ROS Node](#ROS-Node)  
+3.3. [Publisher](#Publisher)  
+3.4. [Subscriber](#Subscriber)  
+3.5. [rqt](#rqt)  
+3.5. [Launchfile](#Launchfile)  
+3.5. [Services](#Services)  
+3.5. [Messages](#Messages)  
+4. [Turtlesim](#Turtlesim)
+5. [Saját Turtlesim node](#Saját-Turtlesim-node)
+
 
 # Mi is az a ROS?
 A ROS = Robot Operating System, de valójában ez nem egy operációs rendszer, hanem egy olyan middleware, melyet a robotikában széles körben alkalmaznak. Nyíltforráskódú és könyvtárai segítségével lehetővé teszi a robot alkalmazások gyors fejlesztését. Sok előre beépített funkciót tartalmaz, amiket meg fogunk ismerni a félév során, például kamerák és más szenzorok kezelése, térképezés és útvonaltervezés, telemanipuláció, stb. Fejlesztését 2007-ben kezdte a Stanford egyetem, 2008-ban csatlakozott a fejlesztéshez a Willow Garage és 2013 óta az OSRF gondozásában, ami 2017-ben Open Robotics-ra változtatta a nevét. 2018 óta a Microsoft és az Amazon részt vesz a ROS fejlesztésében.
