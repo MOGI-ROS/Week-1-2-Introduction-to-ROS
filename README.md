@@ -599,6 +599,8 @@ while not rospy.is_shutdown(): # run the node until Ctrl-C is pressed
 	rate.sleep() # The loop runs at 1Hz
 ```
 
+> **_Ubuntu 20.04 esetén már nincs Python 2.x, emiatt a shebang-et (az első sort)_** `#!/usr/bin/env python3`**_-ra kell módosítani!_**
+
 Indítsuk el a node-ot a `rosrun bme_ros_tutorials basic_node.py` paranccsal:
 
 ```console
