@@ -33,18 +33,49 @@ h2 {color:DeepSkyBlue;}
 [image19]: ./assets/turtlesim_6.png "turtlesim" 
 [image20]: ./assets/turtlesim_7.png "turtlesim" 
 [image21]: ./assets/turtlesim_8.png "turtlesim" 
+[image22]: ./assets/hw_1.png "homework"
+[image23]: ./assets/hw_2.png "homework"
+[image24]: ./assets/hw_3.png "homework"
+[image25]: ./assets/hw_4.png "homework"
+[image26]: ./assets/hw_5.png "homework"
 
 # 1. - 2. hét - bevezetés
 
 
 ## Hova fogunk eljutni a félévben?
 - A félév első fele: mobil robotok, szenzorok, aktuátorok szimulációja. Térképezés, lokalizáció és navigáció:  
-  <a href="https://www.youtube.com/watch?v=L2L7snV4sCs"><img height="400" src="./assets/youtube-navigation.png"></a>
+  <a href="https://www.youtube.com/watch?v=YRHxixKr6r4"><img width="700" src="./assets/youtube-navigation_2.png"></a>  
+  <a href="https://www.youtube.com/watch?v=bLpgL8wKK6o"><img width="700" src="./assets/youtube-navigation_3.png"></a>  
+  <a href="https://www.youtube.com/watch?v=L2L7snV4sCs"><img width="700" src="./assets/youtube-navigation.png"></a>  
+  <a href="https://www.youtube.com/watch?v=MU3ksyzKBbE"><img width="700" src="./assets/youtube-navigation_4.png"></a>  
 
 - A második fele: robotkarok szimulációja és mozgatása, direkt és inverz kinematika:  
-  <a href="https://www.youtube.com/watch?v=mm2vKYH-Jy8"><img height="400" src="./assets/youtube-openmanipulator.png"></a>
+  <a href="https://www.youtube.com/watch?v=AK4aVfQVkVA"><img width="700" src="./assets/youtube-6-DoF.png"></a>  
+  <a href="https://www.youtube.com/watch?v=mm2vKYH-Jy8"><img width="700" src="./assets/youtube-openmanipulator.png"></a>  
+  <a href="https://www.youtube.com/watch?v=FzfFvhL3hpI"><img width="700" src="./assets/youtube-openmanipulator_2.png"></a>  
+  <a href="https://www.youtube.com/watch?v=_nlq3crDGWU"><img width="700" src="./assets/youtube-openmanipulator_3.png"></a>  
+  <a href="https://www.youtube.com/watch?v=81TJOc5OsS0"><img width="700" src="./assets/youtube-openmanipulator_4.png"></a>  
+  <a href="https://www.youtube.com/watch?v=MqUwklw_GUw"><img width="700" src="./assets/youtube-openmanipulator_5.png"></a>  
+  <a href="https://www.youtube.com/watch?v=AD5DEahHPiY"><img width="700" src="./assets/youtube-openmanipulator_6.png"></a>  
 
-- **A tárgy teljesítése: csoportos vagy egyéni házifaladat!**
+- **A tárgy teljesítése: csoportos (2, max 3 fő) házifaladat!**
+
+  Házi feladat ötletek:
+
+  - TurtleBot3 Burger  
+  ![alt text][image22]  
+
+  - Mecanum kerekű robot  
+  ![alt text][image26] 
+
+  - OpenMANIPULATOR-X  
+  ![alt text][image23]  
+
+  - UR3  
+  ![alt text][image24]  
+
+  - Telemanipulátor  
+  ![alt text][image25] 
 
 # Tartalomjegyzék
 1. [Mi is az a ROS?](#Mi-is-az-a-ROS?)
