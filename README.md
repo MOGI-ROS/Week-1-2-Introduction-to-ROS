@@ -75,7 +75,13 @@ h2 {color:DeepSkyBlue;}
   ![alt text][image24]  
 
   - Telemanipulátor  
-  ![alt text][image25] 
+  ![alt text][image25]  
+
+  A házifeladatok kiadása: 5. héten  
+  Határidő: 14. hét  
+    - Projektfeladat
+    - Dokumentáció (GitHub + Markdown)
+    - Prezentáció 15+5 percben
 
 # Tartalomjegyzék
 1. [Mi is az a ROS?](#Mi-is-az-a-ROS?)
