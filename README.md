@@ -325,7 +325,7 @@ A ROS Melodic 2023-ig, a Noetic 2025-ig támogatott.
 
 A ROS telepítése után minden terminálban be kell tölteni a környezetet, ha használni akarjuk a  
 `source /opt/ros/melodic/setup.bash`  
-segítségével. Ha csak egy ROS disztribúciót használunk a gépen, akkor érdemes ezt betenni a `./basrc` fájlba, akkor nem kell többet kézzel betölteni a ROS alap környezetét.
+segítségével. Ha csak egy ROS disztribúciót használunk a gépen, akkor érdemes ezt betenni a `./bashrc` fájlba, akkor nem kell többet kézzel betölteni a ROS alap környezetét.
   
   - ### Catkin workspace parancsok
 
@@ -387,7 +387,7 @@ Command 'roscore' not found, but can be installed with:
 sudo apt install python3-roslaunch
 ```
 
-Ha a telepítés során nem tettük be a ROS környezetet a .bashrc fájlba, akkor minden terminál ablakban kézzel kell betölteni a környezetet:
+Ha a telepítés során nem tettük be a ROS környezetet a `.bashrc` fájlba, akkor minden terminál ablakban kézzel kell betölteni a környezetet:
 
 `source /opt/ros/melodic/setup.bash`
 
