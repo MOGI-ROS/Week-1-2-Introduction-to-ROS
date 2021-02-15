@@ -431,6 +431,12 @@ Lépjünk be a már létrehozott catkin workspace-ünkbe:
 
 `cd ~/catkin_ws/src`
 
+> **_A fejezet anyagának kezdőcsomagja letölthető GIT segítségével a `starter-branch`-ről, de javasolt helyette a következő lépések (csomagkészítés, csomag kezdeti fájljainak beállítása) végigcsinálása._**  
+> ```console
+> git clone -b starter-branch https://github.com/MOGI-ROS/Week-1-2-Introduction-to-ROS.git
+> ```
+
+
 Új node-ot a `catkin_create_pkg` paranccsal tudunk létrehozni. Megadhatjuk a node-unk függőségeit a létrehozáskor:  
 `catkin_create_pkg bme_ros_tutorials roscpp rospy std_msgs actionlib actionlib_msgs`  
 
