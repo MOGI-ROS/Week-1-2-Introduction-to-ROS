@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-  <!-- Start a single node -->
-  <node name="publisher" pkg="bme_ros_tutorials" type="publisher" output ="screen"/>
-</launch>
