@@ -139,6 +139,10 @@ target_link_libraries(service_client ${catkin_LIBRARIES})
 add_executable(publisher_custom src/publisher_custom.cpp)
 target_link_libraries(publisher_custom ${catkin_LIBRARIES})
 
+add_dependencies(service_server bme_ros_tutorials_generate_messages_cpp)
+add_dependencies(service_client bme_ros_tutorials_generate_messages_cpp)
+add_dependencies(publisher_custom bme_ros_tutorials_generate_messages_cpp)
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/bme_ros_tutorials.cpp
