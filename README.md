@@ -552,22 +552,24 @@ A basic_node.cpp fájl tartalma:
 ```cpp
 #include <ros/ros.h>
 
-int main(int argc, char** argv)
-{
-	int count = 0;
-	ros::init(argc, argv, "basic_node"); // Init the node with name "basic_node"
-	ros::NodeHandle nh;                  // NodeHandle will fully initialze the node
-	ros::Rate loop_rate(1);              // 1Hz
-	
-	while (ros::ok())                    // run the node until Ctrl-C is pressed
-	{
-        // print info to std out
-		ROS_INFO("basic_node cpp is running. count = %d", count);
-			
-		count++;
-		
-		loop_rate.sleep();                // The loop runs at 1Hz
-	}
+int main(int argc, char **argv) {
+
+  // Init the node with name "basic_node"
+  ros::init(argc, argv, "basic_node");
+  ros::NodeHandle nh; // NodeHandle will fully initialze the node
+
+  ros::Rate loop_rate(1); // 1Hz
+
+  int count = 0;
+  while (ros::ok()) // run the node until Ctrl-C is pressed
+  {
+    // print info to std out
+    ROS_INFO("basic_node cpp is running. count = %d", count);
+
+    count++;
+
+    loop_rate.sleep(); // The loop runs at 1Hz
+  }
 }
 ```
 Egészítsük ki a CMakeLists.txt fájlt, hogy tartalmazza az új futtatható kódunkat:
@@ -635,11 +637,11 @@ rate = rospy.Rate(1)           # 1Hz
 while not rospy.is_shutdown(): # run the node until Ctrl-C is pressed
 
     # print info to std out
-	rospy.loginfo("simple_node in python is running. count= %d",count)
-	
-	count+=1
-	
-	rate.sleep() # The loop runs at 1Hz
+    rospy.loginfo("basic_node python is running. count= %d",count)
+    
+    count+=1
+    
+    rate.sleep() # The loop runs at 1Hz
 ```
 
 > **_Ubuntu 20.04 esetén már nincs Python 2.x, emiatt a shebang-et (az első sort)_** `#!/usr/bin/env python3`**_-ra kell módosítani!_**
@@ -685,46 +687,49 @@ Hozzuk létre a publisher.cpp fájlt a src mappában:
 A publisher.cpp fájl tartalma:  
 ```cpp
 #include "ros/ros.h"
-#include "std_msgs/Int32.h"           // Message type used in the node
+#include "std_msgs/Int32.h" // Message type used in the node
 
-int main(int argc, char **argv)
-{
-	ros::init(argc, argv, "publisher"); // Init the node with name "publisher"
-	ros::NodeHandle nh;                 // NodeHandle will fully initialze the node
+int main(int argc, char **argv) {
+  // Init the node with name "publisher"
+  ros::init(argc, argv, "publisher");
+  ros::NodeHandle nh; // NodeHandle will fully initialze the node
 
-    /**
-    * The advertise() function is how you tell ROS that you want to
-    * publish on a given topic name. This invokes a call to the ROS
-    * master node, which keeps a registry of who is publishing and who
-    * is subscribing. After this advertise() call is made, the master
-    * node will notify anyone who is trying to subscribe to this topic name,
-    * and they will in turn negotiate a peer-to-peer connection with this
-    * node.  advertise() returns a Publisher object which allows you to
-    * publish messages on that topic through a call to publish().  Once
-    * all copies of the returned Publisher object are destroyed, the topic
-    * will be automatically unadvertised.
-    *
-    * The second parameter to advertise() is the size of the message queue
-    * used for publishing messages.  If messages are published more quickly
-    * than we can send them, the number here specifies how many messages to
-    * buffer up before throwing some away.
-    */
+  /**
+   * The advertise() function is how you tell ROS that you want to
+   * publish on a given topic name. This invokes a call to the ROS
+   * master node, which keeps a registry of who is publishing and who
+   * is subscribing. After this advertise() call is made, the master
+   * node will notify anyone who is trying to subscribe to this topic name,
+   * and they will in turn negotiate a peer-to-peer connection with this
+   * node.  advertise() returns a Publisher object which allows you to
+   * publish messages on that topic through a call to publish().  Once
+   * all copies of the returned Publisher object are destroyed, the topic
+   * will be automatically unadvertised.
+   *
+   * The second parameter to advertise() is the size of the message queue
+   * used for publishing messages.  If messages are published more quickly
+   * than we can send them, the number here specifies how many messages to
+   * buffer up before throwing some away.
+   */
 
-	ros::Publisher pub = nh.advertise<std_msgs::Int32>("publisher_topic", 10);
-	
-	ROS_INFO("Publisher C++ node has started and publishing data on publisher_topic");
-	
-	ros::Rate loop_rate(1); // 1 Hz
-	
-	std_msgs::Int32 count;  // Count is now a ROS Int32 type variable that is ready to be published
-	count.data=0;           // Initializing count
-	
-    while (ros::ok())       // Run the node until Ctrl-C is pressed
-    {		
-		pub.publish(count); // Publishing data on topic "publisher_topic"
-		count.data++;	
-		loop_rate.sleep();  // The loop runs at 1Hz
-	}
+  ros::Publisher pub = nh.advertise<std_msgs::Int32>("publisher_topic", 10);
+
+  ROS_INFO(
+      "Publisher C++ node has started and publishing data on publisher_topic");
+
+  ros::Rate loop_rate(1); // 1 Hz
+
+  std_msgs::Int32 count; // Count is now a ROS Int32 type variable that is ready
+                         // to be published
+  count.data = 0;        // Initializing count
+
+  // Run the node until Ctrl+C is pressed
+  while (ros::ok()) {
+    pub.publish(count); // Publishing data on topic "publisher_topic"
+
+    count.data++;
+    loop_rate.sleep(); // The loop runs at 1Hz
+  }
 }
 ```
 
@@ -840,11 +845,11 @@ count.data = 0                  # Initializing count
 
 while not rospy.is_shutdown():  # Run the node until Ctrl-C is pressed
 
-	pub.publish(count)          # Publishing data on topic "publisher_topic"
+    pub.publish(count)          # Publishing data on topic "publisher_topic"
   
-	count.data += 1
-	
-	rate.sleep()                # The loop runs at 1Hz
+    count.data += 1
+    
+    rate.sleep()                # The loop runs at 1Hz
 ```
 
 Tegyük futtathatóvá, figyeljünk a sorvégekre és már indíthatjuk is a node-unkat!
@@ -874,45 +879,46 @@ A subscriber.cpp fájl tartalma:
 #include "std_msgs/Int32.h" // Message type used in the node
 
 /*
-"sub_cb" is the callback method of the subscriber. Argument "msg" contains the received data with type Int32.
+"sub_cb" is the callback method of the subscriber. Argument "msg" contains the
+received data with type Int32.
 */
-void sub_cb(const std_msgs::Int32::ConstPtr& msg)
-{
-	ROS_INFO("Received data from publisher_topic: [%ld]", (long int)msg->data);
+void sub_cb(const std_msgs::Int32::ConstPtr &msg) {
+  ROS_INFO("Received data from publisher_topic: [%ld]", (long int)msg->data);
 }
 
-int main(int argc, char **argv)
-{
-	ros::init(argc, argv, "subscriber"); // Init the node with name "subscriber"
-	ros::NodeHandle nh;                  // NodeHandle will fully initialze the node
-	
-    /**
-     * The subscribe() call is how you tell ROS that you want to receive messages
-     * on a given topic.  This invokes a call to the ROS
-     * master node, which keeps a registry of who is publishing and who
-     * is subscribing.  Messages are passed to a callback function, here
-     * called chatterCallback.  subscribe() returns a Subscriber object that you
-     * must hold on to until you want to unsubscribe.  When all copies of the Subscriber
-     * object go out of scope, this callback will automatically be unsubscribed from
-     * this topic.
-     *
-     * The second parameter to the subscribe() function is the size of the message
-     * queue.  If messages are arriving faster than they are being processed, this
-     * is the number of messages that will be buffered up before beginning to throw
-     * away the oldest ones.
-     */
-	ros::Subscriber sub = nh.subscribe("publisher_topic", 10, sub_cb);
-	
-	ROS_INFO("Subscriber C++ node has started and subscribed to publisher_topic");
-    
-    /**
-     * ros::spin() will enter a loop, pumping callbacks.  With this version, all
-     * callbacks will be called from within this thread (the main one).  ros::spin()
-     * will exit when Ctrl-C is pressed, or the node is shutdown by the master.
-     */
-	ros::spin();
+int main(int argc, char **argv) {
+  // Init the node with name "subscriber"
+  ros::init(argc, argv, "subscriber");
+  ros::NodeHandle nh; // NodeHandle will fully initialze the node
 
-	return 0;
+  /**
+   * The subscribe() call is how you tell ROS that you want to receive messages
+   * on a given topic.  This invokes a call to the ROS
+   * master node, which keeps a registry of who is publishing and who
+   * is subscribing.  Messages are passed to a callback function, here
+   * called chatterCallback.  subscribe() returns a Subscriber object that you
+   * must hold on to until you want to unsubscribe.  When all copies of the
+   * Subscriber object go out of scope, this callback will automatically be
+   * unsubscribed from this topic.
+   *
+   * The second parameter to the subscribe() function is the size of the message
+   * queue.  If messages are arriving faster than they are being processed, this
+   * is the number of messages that will be buffered up before beginning to
+   * throw away the oldest ones.
+   */
+  ros::Subscriber sub = nh.subscribe("publisher_topic", 10, sub_cb);
+
+  ROS_INFO("Subscriber C++ node has started and subscribed to publisher_topic");
+
+  /**
+   * ros::spin() will enter a loop, pumping callbacks.  With this version, all
+   * callbacks will be called from within this thread (the main one).
+   * ros::spin() will exit when Ctrl-C is pressed, or the node is shutdown by
+   * the master.
+   */
+  ros::spin();
+
+  return 0;
 }
 ```
 
@@ -973,7 +979,7 @@ from std_msgs.msg import Int32 # Message type used in the node
 "sub_callback" is the callback method of the subscriber. Argument "msg" contains the received data.
 '''
 def sub_callback(msg):
-	rospy.loginfo("Received data from publisher_topic: %d", msg.data)
+    rospy.loginfo("Received data from publisher_topic: %d", msg.data)
 
 rospy.init_node('subscriber_py') # Init the node with name "subscriber_py"
 
@@ -1182,25 +1188,29 @@ Hozzunk létre egy `service_server.cpp` és egy `service_client.cpp` fájlt.
 A `service_server.cpp` tartalma:
 
 ```cpp
-#include "ros/ros.h"
 #include "bme_ros_tutorials/AddTwoInts.h"
+#include "ros/ros.h"
 
-bool add(bme_ros_tutorials::AddTwoInts::Request  &req,
-         bme_ros_tutorials::AddTwoInts::Response &res)
-{
+bool add(bme_ros_tutorials::AddTwoInts::Request &req,
+         bme_ros_tutorials::AddTwoInts::Response &res) {
+
   res.sum = req.a + req.b;
+
   ROS_INFO("request: x=%ld, y=%ld", (long int)req.a, (long int)req.b);
   ROS_INFO("sending back response: [%ld]", (long int)res.sum);
   return true;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
+  // Init the node with name "add_two_ints_server"
   ros::init(argc, argv, "add_two_ints_server");
-  ros::NodeHandle n;
+  ros::NodeHandle nh; // NodeHandle will fully initialze the node
 
-  ros::ServiceServer service = n.advertiseService("add_two_ints", add);
+  // Advertise the ROS service
+  ros::ServiceServer service = nh.advertiseService("add_two_ints", add);
   ROS_INFO("Ready to add two ints.");
+
+  // Run until Ctrl+C is pressed
   ros::spin();
 
   return 0;
@@ -1209,37 +1219,41 @@ int main(int argc, char **argv)
 A `service_client.cpp` tartalma:
 
 ```cpp
-#include "ros/ros.h"
 #include "bme_ros_tutorials/AddTwoInts.h"
+#include "ros/ros.h"
 #include <cstdlib>
 
-int main(int argc, char **argv)
-{
-  ros::init(argc, argv, "add_two_ints_client");
-  if (argc != 3)
-  {
+int main(int argc, char **argv) {
+
+  // First, check number of arguments
+  if (argc != 3) {
     ROS_INFO("usage: add_two_ints_client X Y");
     return 1;
   }
 
-  ros::NodeHandle n;
-  ros::ServiceClient client = n.serviceClient<bme_ros_tutorials::AddTwoInts>("add_two_ints");
+  // Init the node with name "add_two_ints_client"
+  ros::init(argc, argv, "add_two_ints_client");
+  ros::NodeHandle nh; // NodeHandle will fully initialze the node
+
+  // Create a ROS service client
+  ros::ServiceClient client =
+      nh.serviceClient<bme_ros_tutorials::AddTwoInts>("add_two_ints");
+
   bme_ros_tutorials::AddTwoInts srv;
+  // Convert arguments to long long int
   srv.request.a = atoll(argv[1]);
   srv.request.b = atoll(argv[2]);
-  if (client.call(srv))
-  {
+
+  // Execute service call and check true or false response
+  if (client.call(srv)) {
     ROS_INFO("Sum: %ld", (long int)srv.response.sum);
-  }
-  else
-  {
+  } else {
     ROS_ERROR("Failed to call service add_two_ints");
     return 1;
   }
 
   return 0;
 }
-
 ```
 
 Adjuk hozzá az új node-okat a CMakeLists.txt-hez:
@@ -1250,6 +1264,12 @@ target_link_libraries(service_server ${catkin_LIBRARIES})
 
 add_executable(service_client src/service_client.cpp)
 target_link_libraries(service_client ${catkin_LIBRARIES})
+```
+
+Valamint az egyedi service-ünk miatt, adjuk hozzá a következő sorokat is a CMakeLists.txt-hez:
+```cmake
+add_dependencies(service_server bme_ros_tutorials_generate_messages_cpp)
+add_dependencies(service_client bme_ros_tutorials_generate_messages_cpp)
 ```
 
 Utána pedig fordítsuk újra a catkin workspace-ünket:  
@@ -1419,34 +1439,56 @@ Hozzunk létre egy `publisher_custom.cpp` fájlt az `src` mappában.
 
 A `publisher_custom.cpp` tartalma:
 ```cpp
-#include "ros/ros.h"
 #include "bme_ros_tutorials/Test.h" // Our custom message type used in the node
+#include "ros/ros.h"
 
-int main(int argc, char **argv)
-{
-	ros::init(argc, argv, "publisher_custom"); // Init the node with name "publisher_custom"
-	ros::NodeHandle nh;                        // NodeHandle will fully initialze the node
+int main(int argc, char **argv) {
+  // Init the node with name "publisher_custom"
+  ros::init(argc, argv, "publisher_custom");
+  ros::NodeHandle nh; // NodeHandle will fully initialze the node
 
-	ros::Publisher pub = nh.advertise<bme_ros_tutorials::Test>("publisher_custom_topic", 10);
-	
-	ROS_INFO("Custom publisher C++ node has started and publishing data on publisher_custom_topic");
-	
-	ros::Rate loop_rate(5); // 5 Hz
-	
-	bme_ros_tutorials::Test test_message; // test_message is now our custom ROS Test type variable that is ready to be published
-	test_message.first_name = "David";    // Initializing first name string
-    test_message.last_name  = "Dudas";    // Initializing last name string
-    test_message.age        = 32;         // Initializing age
-    test_message.score      = 0;          // Initializing score that we'll increment later
-	
-    while (ros::ok()) // Run the node until Ctrl-C is pressed
-    {		
-		pub.publish(test_message); // Publishing data on topic "publisher_custom_topic"
-		test_message.score++;	
-		loop_rate.sleep();         // The loop runs at 5Hz
-	}
+  // Advertise the ROS topic
+  ros::Publisher pub =
+      nh.advertise<bme_ros_tutorials::Test>("publisher_custom_topic", 10);
+
+  ROS_INFO("Custom publisher C++ node has started and publishing data on "
+           "publisher_custom_topic");
+
+  ros::Rate loop_rate(5); // 5 Hz
+
+  bme_ros_tutorials::Test test_message;
+  // test_message is now our custom ROS Test type variable
+  // that is ready to be published
+
+  // assign default values to the message fields
+  test_message.first_name = "David"; // Initializing first name string
+  test_message.last_name = "Dudas";  // Initializing last name string
+  test_message.age = 32;             // Initializing age
+  test_message.score = 0; // Initializing score that we'll increment later
+
+  while (ros::ok()) // Run the node until Ctrl-C is pressed
+  {
+    // Publishing data on topic "publisher_custom_topic"
+    pub.publish(test_message);
+
+    test_message.score++;
+    loop_rate.sleep(); // The loop runs at 5Hz
+  }
 }
 ```
+
+Adjuk hozzá az új node-ot a CMakeLists.txt-hez:
+
+```cmake
+add_executable(publisher_custom src/publisher_custom.cpp)
+target_link_libraries(publisher_custom ${catkin_LIBRARIES})
+```
+
+Valamint az egyedi message-ünk miatt, adjuk hozzá a következő sort is a CMakeLists.txt-hez:
+```cmake
+add_dependencies(publisher_custom bme_ros_tutorials_generate_messages_cpp)
+```
+
 
 ### Python publihser:
 
