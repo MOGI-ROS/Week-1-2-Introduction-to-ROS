@@ -7,7 +7,7 @@ from std_msgs.msg import Int32 # Message type used in the node
 "sub_callback" is the callback method of the subscriber. Argument "msg" contains the received data.
 '''
 def sub_callback(msg):
-	rospy.loginfo("Received data from publisher_topic: %d", msg.data)
+    rospy.loginfo("Received data from publisher_topic: %d", msg.data)
 
 rospy.init_node('subscriber_py') # Init the node with name "subscriber_py"
 
