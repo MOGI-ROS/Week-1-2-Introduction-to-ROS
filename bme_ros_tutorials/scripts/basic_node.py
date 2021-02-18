@@ -9,8 +9,8 @@ rate = rospy.Rate(1)           # 1Hz
 while not rospy.is_shutdown(): # run the node until Ctrl-C is pressed
 
     # print info to std out
-	rospy.loginfo("simple_node in python is running. count= %d",count)
-	
-	count+=1
-	
-	rate.sleep() # The loop runs at 1Hz
+    rospy.loginfo("basic_node python is running. count= %d",count)
+    
+    count+=1
+    
+    rate.sleep() # The loop runs at 1Hz

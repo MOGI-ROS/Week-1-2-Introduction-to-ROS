@@ -17,8 +17,8 @@ count.data = 0                  # Initializing count
 
 while not rospy.is_shutdown():  # Run the node until Ctrl-C is pressed
 
-	pub.publish(count)          # Publishing data on topic "publisher_topic"
+    pub.publish(count)          # Publishing data on topic "publisher_topic"
   
-	count.data += 1
-	
-	rate.sleep()                # The loop runs at 1Hz
+    count.data += 1
+    
+    rate.sleep()                # The loop runs at 1Hz
