@@ -1065,15 +1065,25 @@ Ezzel grafikusan tudjuk ábrázolni azokat az adatainkat, amik számformátumúa
 
 ROS node-okat nem csak a `rosrun` paranccsal tudunk indítani. Készíthetünk úgynevezett launchfile-okat. Ezek speciális XML fájlok, ahol egy launchfile-ban tetszőleges számú node-ot indíthatunk, vagy akár más launchfile-okat is elindíthatunk. Ezeket tipikusan egy node launch mappájában tartjuk, de bárhonnan indíthatók a `roslaunch` paranccsal. Arra érdemes figyelni, ha olyan launchfile-t akarunk indítani, ami nem egy node része, akkor a fájl mappájából kell indítani a `roslaunch` parancsot.
 
-A launchfile felépítése:
+A `publisher.launch` launchfájl felépítése:
 
 ```xml
 <?xml version="1.0"?>
 
 <launch>
-  <!-- Start other launchfile -->
+  <!-- Start a Python and a C++ publisher with different names -->
+  <node name="publisher_p" pkg="bme_ros_tutorials" type="publisher.py" output ="screen"/>
+  <node name="publisher_c" pkg="bme_ros_tutorials" type="publisher" output ="screen"/>
+</launch>
+```
+Az `example.launch` launchfájl felépítése:
+```xml
+<?xml version="1.0"?>
+
+<launch>
+  <!-- Start another launchfile -->
   <include file="$(find bme_ros_tutorials)/launch/publisher.launch"/>
-  <!-- Start a single node -->
+  <!-- Start a single subscriber node -->
   <node name="subscriber" pkg="bme_ros_tutorials" type="subscriber" output ="screen"/>
 </launch>
 ```
@@ -1081,12 +1091,12 @@ A launchfile felépítése:
 Indítsuk el először a `publisher.launch` fájlt:  
 `roslaunch bme_ros_tutorials publisher.launch`
 
-Ha nincs futó ROS masterünk, akkor a launchfile indítása automatikus indít egy ROS mastert is. Bizonyosodjunk meg a publisher node-unk futásáról az `rqt` segítségével.
+Ha nincs futó ROS masterünk, akkor a launchfile indítása automatikus indít egy ROS mastert is. Bizonyosodjunk meg a publisher node-unk futásáról az `rqt` segítségével. A launchfájl két publisher node-ot indít, egy C++ és egy Python node-ot. A korábbiakban láttuk a rosrun esetén, hogy ez nem lehetséges, ha a két node-nak ugyanaz a neve. A launchfájlok esetén a node nevét megváltoztathatjuk, ebben az esetben `publisher_p` és `publisher_c`-re.
 
-Most indítsuk el a fenti `example.launch` fájlt:  
+Állítsuk meg a `publisher.launch` fájlt a Ctrl+C billentyűkombinációval és indítsuk el a fenti `example.launch` fájlt:  
 `roslaunch bme_ros_tutorials example.launch`
 
-A launchfile segítégével elindítottuk a ROS mastert, a publishert és a subscribert egyetlen paranccsal és egyetlen terminál ablakból!
+A launchfile segítégével ismét elindítottuk a ROS mastert (ha nem futott), a publishereket és a subscribert egyetlen paranccsal és egyetlen terminál ablakból!
 
 Megjegyzés: a launch fájl nem alkalmas arra, hogy időzítve indítsunk node-okat. Alapból a ROS mentalitásába nem illeszkedik az, hogy a node-jaink indításakor számítson az időzítés, de néha előfordul ilyen. Ilyenkor készíthetünk egy bash scriptet, ami elindítja az egyes launchfile-okat megfelelően időzítve. Példa:
 
