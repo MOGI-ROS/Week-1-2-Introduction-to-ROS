@@ -572,9 +572,27 @@ int main(int argc, char **argv) {
   }
 }
 ```
-Egészítsük ki a CMakeLists.txt fájlt, hogy tartalmazza az új futtatható kódunkat:
+Egészítsük ki a CMakeLists.txt fájlt, hogy tartalmazza az új futtatható kódunkat valamint töröljük a commentet a `catkin_package` parancs elől:
 
 ```cmake
+###################################
+## catkin specific configuration ##
+###################################
+## The catkin_package macro generates cmake config files for your package
+## Declare things to be passed to dependent projects
+## INCLUDE_DIRS: uncomment this if your package contains header files
+## LIBRARIES: libraries you create in this project that dependent projects also need
+## CATKIN_DEPENDS: catkin_packages dependent projects also need
+## DEPENDS: system dependencies of this project that dependent projects also need
+catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES bme_ros_tutorials
+#  CATKIN_DEPENDS actionlib actionlib_msgs roscpp rospy std_msgs
+#  DEPENDS message_runtime
+)
+
+...
+
 ###########
 ## Build ##
 ###########
@@ -591,10 +609,11 @@ target_link_libraries(basic_node ${catkin_LIBRARIES})
 
 ```
 
-És utána fordítsuk újra a catkin orkspace-t (a workspace gyökréből):
+És utána fordítsuk újra a catkin workspace-t (a workspace gyökeréből):
 
 `cd ~/catkin_ws`  
 `catkin_make`
+`source devel/setup.bash`
 
 Indítsuk el az első node-unkat a `rosrun bme_ros_tutorials basic_node` paranccsal:
 
