@@ -1,15 +1,3 @@
-<!--style>
-details > summary {
-  font-size: 150%;
-  padding: 4px;
-  width: 600px;
-  cursor: pointer;
-  color:DeepSkyBlue;
-}
-h1 {color:DodgerBlue;}
-h2 {color:DeepSkyBlue;}
-</style-->
-
 [//]: # (Image References)
 
 [image1]: ./assets/markdown.svg "Markdwonn"
@@ -43,22 +31,21 @@ h2 {color:DeepSkyBlue;}
 
 
 ## Hova fogunk eljutni a félévben?
-- A félév első fele: mobil robotok, szenzorok, aktuátorok szimulációja. Térképezés, lokalizáció és navigáció:  
-  <a href="https://www.youtube.com/watch?v=YRHxixKr6r4"><img width="700" src="./assets/youtube-navigation_2.png"></a>  
-  <a href="https://www.youtube.com/watch?v=bLpgL8wKK6o"><img width="700" src="./assets/youtube-navigation_3.png"></a>  
-  <a href="https://www.youtube.com/watch?v=L2L7snV4sCs"><img width="700" src="./assets/youtube-navigation.png"></a>  
-  <a href="https://www.youtube.com/watch?v=MU3ksyzKBbE"><img width="700" src="./assets/youtube-navigation_4.png"></a>  
 
-- A második fele: robotkarok szimulációja és mozgatása, direkt és inverz kinematika:  
-  <a href="https://www.youtube.com/watch?v=AK4aVfQVkVA"><img width="700" src="./assets/youtube-6-DoF.png"></a>  
-  <a href="https://www.youtube.com/watch?v=mm2vKYH-Jy8"><img width="700" src="./assets/youtube-openmanipulator.png"></a>  
-  <a href="https://www.youtube.com/watch?v=FzfFvhL3hpI"><img width="700" src="./assets/youtube-openmanipulator_2.png"></a>  
-  <a href="https://www.youtube.com/watch?v=_nlq3crDGWU"><img width="700" src="./assets/youtube-openmanipulator_3.png"></a>  
-  <a href="https://www.youtube.com/watch?v=81TJOc5OsS0"><img width="700" src="./assets/youtube-openmanipulator_4.png"></a>  
-  <a href="https://www.youtube.com/watch?v=MqUwklw_GUw"><img width="700" src="./assets/youtube-openmanipulator_5.png"></a>  
-  <a href="https://www.youtube.com/watch?v=AD5DEahHPiY"><img width="700" src="./assets/youtube-openmanipulator_6.png"></a>  
+### Korábbi Házi feladatok
 
-- **A tárgy teljesítése: csoportos (2, max 3 fő) házifaladat!**
+<a href="https://www.youtube.com/watch?v=uLRQJh-y9AU"><img height="400" src="./assets/projects.png"></a>
+
+### A félév első fele: mobil robotok, szenzorok, aktuátorok szimulációja. Térképezés, lokalizáció és navigáció:  
+  <a href="https://www.youtube.com/watch?v=YRHxixKr6r4"><img height="400" src="./assets/youtube-navigation_2.png"></a>  
+  <a href="https://www.youtube.com/watch?v=L2L7snV4sCs"><img height="400" src="./assets/youtube-navigation.png"></a>  
+
+
+### A második fele: robotkarok szimulációja és mozgatása, direkt és inverz kinematika:  
+  <a href="https://www.youtube.com/watch?v=AK4aVfQVkVA"><img height="400" src="./assets/youtube-6-DoF.png"></a>  
+  <a href="https://www.youtube.com/watch?v=mm2vKYH-Jy8"><img height="400" src="./assets/youtube-openmanipulator.png"></a>  
+
+### A tárgy teljesítése: csoportos (3, max 4 fő) házifaladat!
 
   Házi feladat ötletek:
 
@@ -249,14 +236,14 @@ Ugyan a Microsoft 2018 óta érdeklődik a ROS iránt, és most már telepíthet
 </details>
 
 <details>
-<summary>Windows 10 WSL 2</summary>
+<summary>Windows 11 WSL 2</summary>
 
-A WSL (2) a Windows Subsystem for Linux (2), ez egy teljesértékű Linux kernel, amivel Linux disztribúciót, pl Ubuntu 18.04, futtathatunk a Windowson belül. A tárgy során olyan Linuxos alkalmazásokat fogunk használni, amiknek szüksége van a GPU 3D gyorsítására, ezért a WSL1 nem felel meg a célnak, de a WSL2 már igen!
+A WSL (2) a Windows Subsystem for Linux (2), ez egy teljesértékű Linux kernel, amivel Linux disztribúciót, pl Ubuntu 20.04, futtathatunk a Windowson belül. A tárgy során olyan Linuxos alkalmazásokat fogunk használni, amiknek szüksége van a GPU 3D gyorsítására, ezért a WSL1 nem felel meg a célnak, de a WSL2 már igen!
 
 A WSL telepítése:  
 https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
-Az Ubuntu 18.04 és a 20.04 is elérhető a Microsoft Store-ból. A tárgy során a 18.04 használata javasolt.
+Az Ubuntu 20.04 elérhető a Microsoft Store-ból. A tárgy során a 20.04 használata javasolt.
 
 </details>
 
@@ -283,7 +270,7 @@ export LIBGL_ALWAYS_SOFTWARE=1
 </details>
 
 <details>
-<summary>Terminator / Widows Terminal</summary>
+<summary>Terminator / Windows Terminal</summary>
 
 A Terminator egy nagyon hasznos Linuxos terminál, ezt javaslom a tárgy használata során, mert rengeteg parancssorral fogunk dolgozni.
 
@@ -303,28 +290,28 @@ Parancssor bezárása:
 Terminator (és az összes parancssor) bezárása:  
   `Ctrl+Shift+q`  
 
-Windows 10 WSL2 használata esetén használhatjátok a [Windows Terminal](https://aka.ms/terminal)-t vagy a [Windows Terminal Preview](https://aka.ms/terminal-preview)-t is, ezeket is [jól be lehet állítani](https://docs.microsoft.com/en-us/windows/terminal/panes)!
+Windows 11 WSL2 használata esetén használhatjátok a [Windows Terminal](https://aka.ms/terminal)-t vagy a [Windows Terminal Preview](https://aka.ms/terminal-preview)-t is, ezeket is [jól be lehet állítani](https://docs.microsoft.com/en-us/windows/terminal/panes)!
 
 
 </details>
 
 <details>
-<summary>ROS Melodic</summary>
+<summary>ROS Noetic</summary>
 
   - ### A ROS telepítése  
 
-http://wiki.ros.org/melodic/Installation
+http://wiki.ros.org/noetic/Installation
 
-Ubuntu 18.04 esetén ROS Melodic  
+~~Ubuntu 18.04 esetén ROS Melodic~~  
 Ubuntu 20.04 esetén ROS Noetic  
 
 Telepítés során a full desktop csomagot ajánlott telepíteni, ebben a legtöbb dolog benne van, amit használni fogunk.  
-`sudo apt install ros-melodic-desktop-full`
+`sudo apt install ros-noetic-desktop-full`
 
 A ROS Melodic 2023-ig, a Noetic 2025-ig támogatott.  
 
 A ROS telepítése után minden terminálban be kell tölteni a környezetet, ha használni akarjuk a  
-`source /opt/ros/melodic/setup.bash`  
+`source /opt/ros/noetic/setup.bash`  
 segítségével. Ha csak egy ROS disztribúciót használunk a gépen, akkor érdemes ezt betenni a `./bashrc` fájlba, akkor nem kell többet kézzel betölteni a ROS alap környezetét.
   
   - ### Catkin workspace parancsok
@@ -389,36 +376,36 @@ sudo apt install python3-roslaunch
 
 Ha a telepítés során nem tettük be a ROS környezetet a `.bashrc` fájlba, akkor minden terminál ablakban kézzel kell betölteni a környezetet:
 
-`source /opt/ros/melodic/setup.bash`
+`source /opt/ros/noetic/setup.bash`
 
 Ezután már indíthatjuk a ROS Mastert a `roscore`-ral.
 
 ```console
-david@DavidsLenovoX1:~/catkin_ws$ roscore
-... logging to /home/david/.ros/log/52a3b24e-44ff-11eb-8608-00155df615f6/roslaunch-DavidsLenovoX1-327.log
+david@david-precision-7520:~/bme_catkin_ws$ roscore
+... logging to /home/david/.ros/log/7539c3ba-86a3-11ed-8b98-dd714a583910/roslaunch-david-precision-7520-84787.log
 Checking log directory for disk usage. This may take a while.
 Press Ctrl-C to interrupt
 Done checking log file disk usage. Usage is <1GB.
 
-started roslaunch server http://172.21.233.33:42697/
-ros_comm version 1.14.9
+started roslaunch server http://192.168.1.221:41289/
+ros_comm version 1.15.15
 
 
 SUMMARY
 ========
 
 PARAMETERS
- * /rosdistro: melodic
- * /rosversion: 1.14.9
+ * /rosdistro: noetic
+ * /rosversion: 1.15.15
 
 NODES
 
 auto-starting new master
-process[master]: started with pid [337]
-ROS_MASTER_URI=http://172.21.233.33:11311/
+process[master]: started with pid [84802]
+ROS_MASTER_URI=http://192.168.1.221:11311/
 
-setting /run_id to 52a3b24e-44ff-11eb-8608-00155df615f6
-process[rosout-1]: started with pid [348]
+setting /run_id to 7539c3ba-86a3-11ed-8b98-dd714a583910
+process[rosout-1]: started with pid [84819]
 started core service [/rosout]
 ```
 
@@ -523,7 +510,7 @@ A package.xml szintén tartalmazza a létrehozáskor megadott függőségeket.
 
 Ezt azért praktikus megadni, és ha kell bővíteni a szükséges függőségekkel, hogy a ROS már fordítás előtt tudja, hogy milyen csomagokra van szükség. Ilyenkor a szükséges csomagok telepíthetők a következő paranccsal:
 
-`rosdep install -y --from-paths src --ignore-src --rosdistro melodic -r`
+`rosdep install -y --from-paths src --ignore-src --rosdistro noetic -r`
 
 Enélkül csak fordítás közben derül ki, ha valami hiányzik.
 
@@ -645,7 +632,7 @@ Csináljuk meg ugyanezt a példát Pythonban is a node scripts mappájában:
 A basic_node.py tartalma:
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 
@@ -662,8 +649,6 @@ while not rospy.is_shutdown(): # run the node until Ctrl-C is pressed
     
     rate.sleep() # The loop runs at 1Hz
 ```
-
-> **_Ubuntu 20.04 esetén már nincs Python 2.x, emiatt a shebang-et (az első sort)_** `#!/usr/bin/env python3`**_-ra kell módosítani!_**
 
 Indítsuk el a node-ot a `rosrun bme_ros_tutorials basic_node.py` paranccsal:
 
@@ -845,7 +830,7 @@ Láthatjuk, hogy az adatnak van egy subscriber-e, hiszen a parancssorban echozzu
 Csináljuk meg a publisher node-unk Python változatát is `publisher.py` néven!
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from std_msgs.msg import Int32  # Message type used in the node
@@ -989,7 +974,7 @@ Subscribers:
 Csináljuk meg a Python subscriberünket subscriber.py néven:
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from std_msgs.msg import Int32 # Message type used in the node
@@ -1127,7 +1112,7 @@ cd $(pwd)/../../..; catkin_make
 
 # source catkin_ws and ros workspace
 source devel/setup.bash
-source /opt/ros/melodic/setup.bash
+source /opt/ros/noetic/setup.bash
 
 # start the launchfiles in individual terminals using xterm
 xterm  -e  " roslaunch bme_ros_tutorials example1.launch" &    
@@ -1318,7 +1303,7 @@ Hozzunk létre egy `service_server.py` és egy `service_client.py` fájlt a scri
 
 A `service_server.py` fájl tartalma:
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from __future__ import print_function
 
@@ -1341,7 +1326,7 @@ if __name__ == "__main__":
 
 A `service_client.py` fájl tartalma:
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from __future__ import print_function
 
@@ -1492,7 +1477,7 @@ int main(int argc, char **argv) {
   // assign default values to the message fields
   test_message.first_name = "David"; // Initializing first name string
   test_message.last_name = "Dudas";  // Initializing last name string
-  test_message.age = 32;             // Initializing age
+  test_message.age = 34;             // Initializing age
   test_message.score = 0; // Initializing score that we'll increment later
 
   while (ros::ok()) // Run the node until Ctrl-C is pressed
@@ -1526,7 +1511,7 @@ Hozzunk létre egy `publisher_custom.py` fájlt a `scripts` mappában.
 A `publisher_custom.py` tartalma:
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from bme_ros_tutorials.msg import Test # Our custom message type used in the node
@@ -1542,7 +1527,7 @@ rate = rospy.Rate(5) # 5Hz
 testMessage = Test()
 testMessage.first_name = "David"
 testMessage.last_name  = "Dudas"
-testMessage.age        = 32
+testMessage.age        = 34
 testMessage.score      = 0
 
 while not rospy.is_shutdown(): # Run the node until Ctrl-C is pressed
@@ -1699,7 +1684,7 @@ Publishers:
 Subscribers: None
 ```
 
-Tehát a `/turtle1/cmd_vel` segítségével irányítja a keyboard teleop node a szimulátort, ez egy [ROS Twist típusú üzenet](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/Twist.html), amit általánosan arra a célra használunk, hogy egy robot mozgását írjuk le 6D-ben, két 3 elemű linear és angular vektor segítségével. A `/turtle1/pose`-t pedig a szimulátor küldi és a teknős valós idejű pozicióját, orientációját és sebességét írja le. Ez nem a [ROS alap Pose típusú üzenete](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/Pose.html), hanem egy speciáis [Turtlesim által definiált üzenet](http://docs.ros.org/en/melodic/api/turtlesim/html/msg/Pose.html)! Mivel a Turtlesim egy 2D-s világ, ezért az orientáció leírása egyetlen szöggel, a z tengely körüli elfordulással leírható. A ROS alap Pose üzenete általánosabb, és az orentációt egy 4 elemű Quaternionnal írja le.
+Tehát a `/turtle1/cmd_vel` segítségével irányítja a keyboard teleop node a szimulátort, ez egy [ROS Twist típusú üzenet](http://docs.ros.org/en/noetic/api/geometry_msgs/html/msg/Twist.html), amit általánosan arra a célra használunk, hogy egy robot mozgását írjuk le 6D-ben, két 3 elemű linear és angular vektor segítségével. A `/turtle1/pose`-t pedig a szimulátor küldi és a teknős valós idejű pozicióját, orientációját és sebességét írja le. Ez nem a [ROS alap Pose típusú üzenete](http://docs.ros.org/en/noetic/api/geometry_msgs/html/msg/Pose.html), hanem egy speciáis [Turtlesim által definiált üzenet](http://docs.ros.org/en/noetic/api/turtlesim/html/msg/Pose.html)! Mivel a Turtlesim egy 2D-s világ, ezért az orientáció leírása egyetlen szöggel, a z tengely körüli elfordulással leírható. A ROS alap Pose üzenete általánosabb, és az orentációt egy 4 elemű Quaternionnal írja le.
 
 Indítsunk a keyboard teleop mellé egy rqt-t is! És vizsgáljuk meg ezeket az üzeneteket ott is!
 
@@ -1713,7 +1698,7 @@ Az robot x és y koordinátáit tetszőlegesen ki is rajzolhatjuk! Erre az rqt [
 ![alt text][image21]
 
 A multiplot nem része az alap ROS telepítésnek, így ha nem lenne a listában, akkor így tudjuk feltelepíteni:  
-`sudo apt install ros-melodic-rqt-multiplot`
+`sudo apt install ros-noetic-rqt-multiplot`
 
 Ha ezek után sincs a listában, akkor ezzel tudjuk kényszeríteni az rqt-t, hogy megtalálja a plugint:  
 `rosrun rqt_multiplot rqt_multiplot --force-discover`
@@ -1732,7 +1717,7 @@ A vektorok tengelyeit a ROS konvenciója szerint úgy használjuk, hogy a robot 
 `touch draw_circle.py`
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from geometry_msgs.msg import Twist      # We'll use Twist message in the node
@@ -1768,7 +1753,7 @@ Kézzel meghívtunk az előbb pár turtlesim service-t, most tegyük ezt meg kó
 `touch draw_circle_service_calls.py`
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from geometry_msgs.msg import Twist # We'll use Twist message in the node
