@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from bme_ros_tutorials.msg import Test # Our custom message type used in the node
@@ -14,7 +14,7 @@ rate = rospy.Rate(5) # 5Hz
 testMessage = Test()
 testMessage.first_name = "David"
 testMessage.last_name  = "Dudas"
-testMessage.age        = 32
+testMessage.age        = 34
 testMessage.score      = 0
 
 while not rospy.is_shutdown(): # Run the node until Ctrl-C is pressed

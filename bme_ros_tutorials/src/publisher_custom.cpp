@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
   // assign default values to the message fields
   test_message.first_name = "David"; // Initializing first name string
   test_message.last_name = "Dudas";  // Initializing last name string
-  test_message.age = 32;             // Initializing age
+  test_message.age = 34;             // Initializing age
   test_message.score = 0; // Initializing score that we'll increment later
 
   while (ros::ok()) // Run the node until Ctrl-C is pressed
